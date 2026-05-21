@@ -1,0 +1,123 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasUserDoc() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return hasUserDoc() && getUserData().role == 'admin';
+    }
+
+    function isManager() {
+      return hasUserDoc() && (getUserData().role == 'admin' || getUserData().role == 'manager');
+    }
+
+    function isStaff() {
+      return hasUserDoc() && (getUserData().role == 'admin' || getUserData().role == 'manager' || getUserData().role == 'staff');
+    }
+
+    function isStoreKeeper() {
+      return hasUserDoc() && (getUserData().role == 'admin' || getUserData().role == 'storekeeper');
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn(); // Allow initial profile creation
+      allow update, delete: if isAdmin();
+    }
+
+    // Products
+    match /products/{productId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || isStoreKeeper() || isManager();
+    }
+
+    // Categories
+    match /categories/{categoryId} {
+      allow read: if isSignedIn();
+      allow write: if isManager();
+    }
+
+    // Customers
+    match /customers/{customerId} {
+      allow read: if isSignedIn();
+      allow write: if isManager() || isStaff();
+    }
+
+    // Suppliers
+    match /suppliers/{supplierId} {
+      allow read: if isSignedIn();
+      allow write: if isManager();
+    }
+
+    // Invoices
+    match /invoices/{invoiceId} {
+      allow read: if isSignedIn();
+      allow write: if isManager() || isStaff();
+    }
+
+    // Purchases
+    match /purchases/{purchaseId} {
+      allow read: if isSignedIn();
+      allow write: if isManager();
+    }
+
+    // Expenses
+    match /expenses/{expenseId} {
+      allow read: if isSignedIn();
+      allow write: if isManager();
+    }
+
+    // Activity Logs
+    match /activityLogs/{logId} {
+      allow read: if isStaff();
+      allow create: if isSignedIn();
+      allow update, delete: if isManager();
+    }
+
+    // Settings
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Backup Metadata
+    match /backupMetadata/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Stock Movements
+    match /stockMovements/{movementId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || isStoreKeeper() || isManager();
+    }
+
+    // Counters
+    match /counters/{counterId} {
+      allow read: if isSignedIn();
+      allow write: if isManager() || isStaff();
+    }
+
+    // Productions
+    match /productions/{productionId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || isStoreKeeper() || isManager();
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "entities": {
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "System-wide activity logging",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "metadata": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userEmail", "action", "createdAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile and role information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "manager", "staff", "storekeeper"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "BackupMetadata": {
+      "title": "BackupMetadata",
+      "description": "Metadata for system backups",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "lastBackupAt": { "type": "string", "format": "date-time" },
+        "lastBackupEmail": { "type": "string" },
+        "size": { "type": "number" },
+        "type": { "type": "string", "enum": ["local", "drive"] },
+        "status": { "type": "string" }
+      },
+      "required": ["lastBackupAt", "type"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Raw materials and finished goods",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "type": { "type": "string", "enum": ["raw", "finished", "service"] },
+        "unitType": { "type": "string", "enum": ["kg", "ton", "feet", "meter", "piece", "sq ft", "sq m"] },
+        "size": { "type": "string" },
+        "weight": { "type": "number" },
+        "purchasePrice": { "type": "number" },
+        "labourCharges": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "currentStock": { "type": "number" },
+        "minStock": { "type": "number" },
+        "bom": { 
+          "type": "array",
+          "description": "Bill of Materials: list of raw materials needed to produce 1 unit of this finished item"
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Production": {
+      "title": "Production",
+      "description": "Manufacturing log converting raw materials to finished goods",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "quantityProduced": { "type": "number" },
+        "batchNumber": { "type": "string" },
+        "consumedMaterials": { "type": "array" },
+        "labourCost": { "type": "number" },
+        "otherCosts": { "type": "number" },
+        "totalCost": { "type": "number" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "quantityProduced", "createdAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product categories",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Client information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "address": { "type": "string" },
+        "balance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Vendor information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "address": { "type": "string" },
+        "balance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Invoice": {
+      "title": "Invoice",
+      "description": "Sales record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "invoiceNumber": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "tax": { "type": "number" },
+        "total": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "balance": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "status": { "type": "string", "enum": ["paid", "partial", "unpaid"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Purchase": {
+      "title": "Purchase",
+      "description": "Purchase record from suppliers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "supplierId": { "type": "string" },
+        "supplierName": { "type": "string" },
+        "items": { "type": "array" },
+        "total": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "balance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Expense": {
+      "title": "Expense",
+      "description": "Operational expenses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "StockMovement": {
+      "title": "StockMovement",
+      "description": "History of stock changes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "type": { "type": "string", "enum": ["in", "out", "adjustment"] },
+        "quantity": { "type": "number" },
+        "reason": { "type": "string" },
+        "referenceId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "GlobalSettings": {
+      "title": "GlobalSettings",
+      "description": "Application-wide configuration and theme settings",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string" },
+        "companyAddress": { "type": "string" },
+        "companyPhone": { "type": "string" },
+        "companyEmail": { "type": "string" },
+        "currencySymbol": { "type": "string" },
+        "themeMode": { "type": "string", "enum": ["light", "dark", "system"] },
+        "lightBg": { "type": "string" },
+        "lightText": { "type": "string" },
+        "darkBg": { "type": "string" },
+        "darkText": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Counter": {
+      "title": "Counter",
+      "description": "Sequential counters for unique references",
+      "type": "object",
+      "properties": {
+        "year": { "type": "number" },
+        "lastNumber": { "type": "number" }
+      }
+    }
+  },
+  "firestore": {
+    "users": { "schema": "User", "description": "User profiles" },
+    "products": { "schema": "Product", "description": "Inventory products" },
+    "categories": { "schema": "Category", "description": "Product categories" },
+    "customers": { "schema": "Customer", "description": "Customer list" },
+    "suppliers": { "schema": "Supplier", "description": "Supplier list" },
+    "invoices": { "schema": "Invoice", "description": "Sales invoices" },
+    "purchases": { "schema": "Purchase", "description": "Purchase records" },
+    "productions": { "schema": "Production", "description": "Manufacturing/Fabrication logs" },
+    "expenses": { "schema": "Expense", "description": "Expense records" },
+    "stockMovements": { "schema": "StockMovement", "description": "Stock change history" },
+    "activityLogs": { "schema": "ActivityLog", "description": "User activity logs for auditing" },
+    "backupMetadata": { "schema": "BackupMetadata", "description": "Tracking system backups" },
+    "settings": { "schema": "GlobalSettings", "description": "Global application settings" },
+    "counters": { "schema": "Counter", "description": "Cross-session sequential numbering" }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-04-30T14:35:00.000Z",
+  "exportedBy": "system@example.com",
+  "data": {
+    "users": [
+      { "id": "admin_user", "email": "admin@example.com", "role": "admin", "name": "Admin User" }
+    ],
+    "products": [
+      { "id": "p1", "name": "MS Pipe 1x1", "code": "MSP001", "category": "MS Pipes", "unitType": "kg", "purchasePrice": 120, "salePrice": 150, "currentStock": 500, "minStock": 100 },
+      { "id": "p2", "name": "Iron Sheet 2mm", "code": "IS002", "category": "Iron Sheets", "unitType": "kg", "purchasePrice": 200, "salePrice": 240, "currentStock": 1200, "minStock": 200 },
+      { "id": "p3", "name": "Steel Rod 12mm", "code": "SR003", "category": "Steel Rods", "unitType": "kg", "purchasePrice": 180, "salePrice": 210, "currentStock": 800, "minStock": 150 },
+      { "id": "p4", "name": "Angle 25x25", "code": "ANG004", "category": "Angles", "unitType": "kg", "purchasePrice": 140, "salePrice": 170, "currentStock": 1500, "minStock": 300 }
+    ],
+    "customers": [
+      { "id": "c1", "name": "Arslan Builders", "phone": "0300-1234567", "address": "Liaquat Road, Saddar", "totalPurchases": 45000, "balance": 5000 },
+      { "id": "c2", "name": "Metro Constructions", "phone": "0311-9876543", "address": "DHA Phase 6", "totalPurchases": 120000, "balance": 0 }
+    ],
+    "suppliers": [
+      { "id": "s1", "name": "Pakistan Steel Mills", "phone": "021-34567890", "address": "Port Qasim, Karachi", "balance": 0 },
+      { "id": "s2", "name": "Mughal Steel", "phone": "042-111-MUGHAL", "address": "Sheikhupura Road, Lahore", "balance": 15000 }
+    ],
+    "invoices": [
+      { "id": "inv1", "invoiceNumber": "INV-1001", "customerId": "c1", "customerName": "Arslan Builders", "date": "2026-04-28T10:00:00Z", "items": [{ "productId": "p1", "name": "MS Pipe 1x1", "quantity": 100, "price": 150, "total": 15000 }], "subtotal": 15000, "discount": 0, "total": 15000, "paidAmount": 10000, "balance": 5000, "paymentMethod": "Cash", "status": "Partial" }
+    ],
+    "purchases": [
+      { "id": "pur1", "supplierId": "s2", "date": "2026-04-25T14:00:00Z", "items": [{ "productId": "p2", "name": "Iron Sheet 2mm", "quantity": 500, "cost": 200, "total": 100000 }], "total": 100000, "paidAmount": 85000, "balance": 15000 }
+    ],
+    "expenses": [
+      { "id": "exp1", "category": "Fuel", "description": "Delivery truck refueling", "amount": 2500, "date": "2026-04-29T09:30:00Z", "paymentMethod": "Cash" },
+      { "id": "exp2", "category": "Salaries", "description": "Daily wage workers (3 persons)", "amount": 4500, "date": "2026-04-29T18:00:00Z", "paymentMethod": "Cash" }
+    ],
+    "activityLogs": [
+      { "id": "log1", "userEmail": "admin@example.com", "action": "INVENTORY_CREATE", "details": "Added MS Pipe 1x1", "createdAt": { "seconds": 1714485600, "nanoseconds": 0 } }
+    ]
+  }
+}

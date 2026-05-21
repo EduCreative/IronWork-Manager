@@ -1,0 +1,118 @@
+{
+  "version": "1.1",
+  "timestamp": "2026-05-01T10:55:00Z",
+  "data": {
+    "products": [
+      { "id": "p1", "name": "MS Angle 25x25x3", "code": "ANG-25-3", "category": "Angles", "type": "raw", "unitType": "ft", "purchasePrice": 45, "salePrice": 60, "currentStock": 1250, "minStock": 200, "createdAt": "2026-01-01T10:00:00Z" },
+      { "id": "p2", "name": "MS Channel 4x2", "code": "CH-42", "category": "Channels", "type": "raw", "unitType": "ft", "purchasePrice": 120, "salePrice": 165, "currentStock": 450, "minStock": 100, "createdAt": "2026-01-01T10:30:00Z" },
+      { "id": "p3", "name": "Flat Bar 1x1/8", "code": "FB-118", "category": "Flat Bars", "type": "raw", "unitType": "ft", "purchasePrice": 32, "salePrice": 45, "currentStock": 800, "minStock": 150, "createdAt": "2026-01-02T11:00:00Z" },
+      { "id": "p4", "name": "I-Beam 6x3", "code": "IB-63", "category": "Beams", "type": "raw", "unitType": "ft", "purchasePrice": 450, "salePrice": 580, "currentStock": 85, "minStock": 30, "createdAt": "2026-01-05T09:00:00Z" },
+      { "id": "p5", "name": "Welding Electrodes 3.2mm", "code": "WE-32", "category": "Consumables", "type": "raw", "unitType": "packet", "purchasePrice": 850, "salePrice": 1100, "currentStock": 42, "minStock": 20, "createdAt": "2026-01-10T14:00:00Z" },
+      { "id": "p6", "name": "Main Entrance Gate (Small)", "code": "FG-GATE-S", "category": "Fabricated", "type": "finished", "unitType": "unit", "purchasePrice": 18500, "salePrice": 25000, "currentStock": 2, "minStock": 5, "bom": [
+        { "productId": "p1", "name": "MS Angle 25x25x3", "quantity": 120, "unitType": "ft", "unitCost": 45 },
+        { "productId": "p3", "name": "Flat Bar 1x1/8", "quantity": 80, "unitType": "ft", "unitCost": 32 },
+        { "productId": "p5", "name": "Welding Electrodes 3.2mm", "quantity": 0.5, "unitType": "packet", "unitCost": 850 }
+      ], "labourCharges": 3500, "createdAt": "2026-05-01T10:00:00Z" },
+      { "id": "p7", "name": "Window Grill (Classic)", "code": "FG-GRILL-C", "category": "Fabricated", "type": "finished", "unitType": "sq ft", "purchasePrice": 450, "salePrice": 650, "currentStock": 150, "minStock": 50, "bom": [
+        { "productId": "p1", "name": "MS Angle 25x25x3", "quantity": 4, "unitType": "ft", "unitCost": 45 },
+        { "productId": "p3", "name": "Flat Bar 1x1/8", "quantity": 6, "unitType": "ft", "unitCost": 32 }
+      ], "labourCharges": 80, "createdAt": "2026-05-01T10:15:00Z" },
+      { "id": "p8", "name": "Boundary Wall Spike (Heavy)", "code": "FG-SPIKE-H", "category": "Fabricated", "type": "finished", "unitType": "meter", "purchasePrice": 1200, "salePrice": 1850, "currentStock": 45, "minStock": 20, "bom": [
+        { "productId": "p3", "name": "Flat Bar 1x1/8", "quantity": 12, "unitType": "ft", "unitCost": 32 },
+        { "productId": "p5", "name": "Welding Electrodes 3.2mm", "quantity": 0.1, "unitType": "packet", "unitCost": 850 }
+      ], "labourCharges": 350, "createdAt": "2026-05-01T10:20:00Z" }
+    ],
+    "productions": [
+      { 
+        "id": "prod1", 
+        "productId": "p6", 
+        "productName": "Main Entrance Gate (Small)", 
+        "quantityProduced": 1, 
+        "consumedMaterials": [
+          { "productId": "p1", "name": "MS Angle 25x25x3", "quantity": 120, "unitType": "ft", "unitCost": 45 },
+          { "productId": "p3", "name": "Flat Bar 1x1/8", "quantity": 80, "unitType": "ft", "unitCost": 32 },
+          { "productId": "p5", "name": "Welding Electrodes 3.2mm", "quantity": 0.5, "unitType": "packet", "unitCost": 850 }
+        ], 
+        "labourCost": 3500, 
+        "otherCosts": 500, 
+        "totalCost": 18500, 
+        "unitCost": 18500, 
+        "notes": "First batch production", 
+        "createdAt": "2026-05-05T14:00:00Z" 
+      },
+      { 
+        "id": "prod2", 
+        "productId": "p7", 
+        "productName": "Window Grill (Classic)", 
+        "quantityProduced": 20, 
+        "consumedMaterials": [
+          { "productId": "p1", "name": "MS Angle 25x25x3", "quantity": 4, "unitType": "ft", "unitCost": 45 },
+          { "productId": "p3", "name": "Flat Bar 1x1/8", "quantity": 6, "unitType": "ft", "unitCost": 32 }
+        ], 
+        "labourCost": 1600, 
+        "otherCosts": 200, 
+        "totalCost": 9200, 
+        "unitCost": 460, 
+        "notes": "Hotel contract grills", 
+        "createdAt": "2026-05-06T11:00:00Z" 
+      },
+      { 
+        "id": "prod3", 
+        "productId": "p8", 
+        "productName": "Boundary Wall Spike (Heavy)", 
+        "quantityProduced": 10, 
+        "consumedMaterials": [
+          { "productId": "p3", "name": "Flat Bar 1x1/8", "quantity": 12, "unitType": "ft", "unitCost": 32 },
+          { "productId": "p5", "name": "Welding Electrodes 3.2mm", "quantity": 0.1, "unitType": "packet", "unitCost": 850 }
+        ], 
+        "labourCost": 3500, 
+        "otherCosts": 100, 
+        "totalCost": 8290, 
+        "unitCost": 829, 
+        "notes": "Residential order", 
+        "createdAt": "2026-05-10T14:00:00Z" 
+      }
+    ],
+    "customers": [
+      { "id": "c1", "name": "Elite Construction Ltd", "phone": "555-1234", "address": "Metropolis Square", "balance": 45000, "createdAt": "2026-01-20T10:00:00Z" },
+      { "id": "c2", "name": "Modern Fabrication Hub", "phone": "555-5678", "address": "Industrial Zone B", "balance": 12500, "createdAt": "2026-02-01T11:00:00Z" },
+      { "id": "c3", "name": "Solo Contractors", "phone": "555-9012", "address": "Downtown Office 4", "balance": 0, "createdAt": "2026-02-15T09:30:00Z" },
+      { "id": "c4", "name": "Heavy Steel Projects", "phone": "555-3344", "address": "Harbor Port Area", "balance": -5000, "createdAt": "2026-03-01T14:00:00Z" }
+    ],
+    "suppliers": [
+      { "id": "s1", "name": "Global Steel Industries", "phone": "888-1111", "address": "Industrial Estate 1", "balance": 120000, "createdAt": "2026-01-01T08:00:00Z" },
+      { "id": "s2", "name": "Quality Metals Co.", "phone": "888-2222", "address": "North Industrial Zone", "balance": 35000, "createdAt": "2026-02-05T10:00:00Z" }
+    ],
+    "expenses": [
+      { "id": "e1", "category": "Electricity", "amount": 12500, "details": "March 2026 Bill", "date": "2026-03-05", "createdAt": "2026-03-05T10:00:00Z" },
+      { "id": "e2", "category": "Salary", "amount": 85000, "details": "March Staff Salaries", "date": "2026-03-31", "createdAt": "2026-03-31T17:00:00Z" },
+      { "id": "e3", "category": "Rent", "amount": 40000, "details": "Workshop Rent April", "date": "2026-04-01", "createdAt": "2026-04-01T09:00:00Z" },
+      { "id": "e4", "category": "Fuel", "amount": 4500, "details": "Delivery Truck Refill", "date": "2026-04-10", "createdAt": "2026-04-10T11:30:00Z" },
+      { "id": "e5", "category": "Marketing", "amount": 15000, "details": "New Flyers and Social Ads", "date": "2026-04-15", "createdAt": "2026-04-15T14:00:00Z" },
+      { "id": "e6", "category": "Electricity", "amount": 14200, "details": "April 2026 Bill", "date": "2026-05-01", "createdAt": "2026-05-01T08:30:00Z" }
+    ],
+    "purchases": [
+      { "id": "pur1", "purchaseNumber": "PUR-5001", "supplierId": "s1", "supplierName": "Global Steel Industries", "items": [{ "id": "p1", "name": "MS Angle 25x25x3", "cost": 45, "quantity": 1000, "unitType": "ft" }], "total": 45000, "paidAmount": 45000, "balance": 0, "date": "2026-03-10", "createdAt": "2026-03-10T11:00:00Z" },
+      { "id": "pur2", "purchaseNumber": "PUR-5002", "supplierId": "s2", "supplierName": "Quality Metals Co.", "items": [{ "id": "p4", "name": "I-Beam 6x3", "cost": 450, "quantity": 50, "unitType": "ft" }], "total": 22500, "paidAmount": 10000, "balance": 12500, "date": "2026-03-25", "createdAt": "2026-03-25T14:00:00Z" },
+      { "id": "pur3", "purchaseNumber": "PUR-5003", "supplierId": "s1", "supplierName": "Global Steel Industries", "items": [{ "id": "p2", "name": "MS Channel 4x2", "cost": 120, "quantity": 200, "unitType": "ft" }], "total": 24000, "paidAmount": 24000, "balance": 0, "date": "2026-04-05", "createdAt": "2026-04-05T10:00:00Z" },
+      { "id": "pur4", "purchaseNumber": "PUR-5004", "supplierId": "s2", "supplierName": "Quality Metals Co.", "items": [{ "id": "p3", "name": "Flat Bar 1x1/8", "cost": 32, "quantity": 500, "unitType": "ft" }], "total": 16000, "paidAmount": 16000, "balance": 0, "date": "2026-05-02", "createdAt": "2026-05-02T09:00:00Z" }
+    ],
+    "invoices": [
+      { "id": "i1", "invoiceNumber": "INV-2001", "customerId": "c1", "customerName": "Elite Construction Ltd", "items": [{ "id": "p1", "name": "MS Angle 25x25x3", "price": 60, "quantity": 100, "unitType": "ft" }], "subtotal": 6000, "discount": 0, "total": 6000, "paidAmount": 6000, "balance": 0, "paymentMethod": "Cash", "status": "paid", "createdAt": "2026-03-05T12:00:00Z" },
+      { "id": "i2", "invoiceNumber": "INV-2002", "customerId": "c2", "customerName": "Modern Fabrication Hub", "items": [{ "id": "p2", "name": "MS Channel 4x2", "price": 165, "quantity": 40, "unitType": "ft" }], "subtotal": 6600, "discount": 100, "total": 6500, "paidAmount": 3000, "balance": 3500, "paymentMethod": "Bank Transfer", "status": "partial", "createdAt": "2026-03-12T14:00:00Z" },
+      { "id": "i3", "invoiceNumber": "INV-2003", "customerId": "c1", "customerName": "Elite Construction Ltd", "items": [{ "id": "p4", "name": "I-Beam 6x3", "price": 580, "quantity": 20, "unitType": "ft" }], "subtotal": 11600, "discount": 600, "total": 11000, "paidAmount": 5000, "balance": 6000, "paymentMethod": "Cash", "status": "partial", "createdAt": "2026-03-20T10:30:00Z" },
+      { "id": "i4", "invoiceNumber": "INV-2004", "customerId": "c3", "customerName": "Solo Contractors", "items": [{ "id": "p3", "name": "Flat Bar 1x1/8", "price": 45, "quantity": 200, "unitType": "ft" }], "subtotal": 9000, "discount": 0, "total": 9000, "paidAmount": 9000, "balance": 0, "paymentMethod": "Cash", "status": "paid", "createdAt": "2026-03-28T15:00:00Z" },
+      { "id": "i5", "invoiceNumber": "INV-2013", "customerId": "c1", "customerName": "Elite Construction Ltd", "items": [{ "id": "p6", "name": "Main Entrance Gate (Small)", "price": 25000, "quantity": 1, "unitType": "unit" }], "subtotal": 25000, "discount": 500, "total": 24500, "paidAmount": 24500, "balance": 0, "paymentMethod": "Bank Transfer", "status": "paid", "createdAt": "2026-05-07T15:00:00Z" },
+      { "id": "i6", "invoiceNumber": "INV-2014", "customerId": "c2", "customerName": "Modern Fabrication Hub", "items": [{ "id": "p7", "name": "Window Grill (Classic)", "price": 650, "quantity": 50, "unitType": "sq ft" }], "subtotal": 32500, "discount": 1500, "total": 31000, "paidAmount": 10000, "balance": 21000, "paymentMethod": "Credit", "status": "pending", "createdAt": "2026-05-08T10:00:00Z" }
+    ],
+    "stockMovements": [
+      { "id": "m1", "productId": "p1", "productName": "MS Angle 25x25x3", "type": "IN", "quantity": 1000, "reason": "PUR-5001 Purchase", "date": "2026-03-10", "createdAt": "2026-03-10T11:00:00Z" },
+      { "id": "m2", "productId": "p1", "productName": "MS Angle 25x25x3", "type": "OUT", "quantity": 100, "reason": "INV-2001 Sale", "date": "2026-03-05", "createdAt": "2026-03-05T12:00:00Z" },
+      { "id": "m3", "productId": "p4", "productName": "I-Beam 6x3", "type": "IN", "quantity": 50, "reason": "PUR-5002 Purchase", "date": "2026-03-25", "createdAt": "2026-03-25T14:00:00Z" },
+      { "id": "m4", "productId": "p2", "productName": "MS Channel 4x2", "type": "IN", "quantity": 200, "reason": "PUR-5003 Purchase", "date": "2026-04-05", "createdAt": "2026-04-05T10:00:00Z" }
+    ],
+    "activityLogs": [
+      { "id": "l1", "type": "BACKUP_RESTORE", "details": "Initial system setup from sample data", "user": "admin@example.com", "createdAt": "2026-05-01T10:55:00Z" }
+    ]
+  }
+}

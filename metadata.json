@@ -1,0 +1,12 @@
+{
+  "name": "ForgeSteel Manager",
+  "description": "Professional Inventory, Billing, and Production Management System for Iron Works and Steel Fabrication companies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "Inventory Management with weight-based units",
+    "Professional Invoice Generation with PDF Export",
+    "Customer and Supplier Balance Tracking",
+    "Expense and Purchase Management",
+    "Real-time Business Analytics Dashboard"
+  ]
+}

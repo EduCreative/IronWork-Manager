@@ -36,9 +36,15 @@ interface Props {
 export default function Layout({ userRole }: Props) {
   const { themeMode, lightBg, lightText, darkBg, darkText, companyName } = useConfig();
   const { progress, message } = useProgress();
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(window.innerWidth >= 1024);
   const [lowStockCount, setLowStockCount] = React.useState(0);
   const navigate = useNavigate();
+
+  const handleNavClick = () => {
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+  };
 
   React.useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
@@ -170,6 +176,7 @@ export default function Layout({ userRole }: Props) {
                     : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
                 )}
                 title={`Go to ${item.name}`}
+                onClick={handleNavClick}
               >
                 {({ isActive }) => (
                   <div className="flex items-center justify-between w-full">

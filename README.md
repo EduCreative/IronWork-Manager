@@ -13,6 +13,7 @@ A comprehensive multi-user inventory and sales management system built for steel
 
 ## Updates
 ### [1.6.1] - 2026-05-22
+- **Responsive Mobile Navigation Auto-Collapse**: Fixed mobile and small-screen layouts to naturally collapse the main sidebar immediately upon selecting any dashboard option or link, eliminating the need to manually close it with the 'X' button. Additionally initialized the sidebar to be collapsed on mobile screens at boot, preventing obstruction on smaller viewport loading.
 - **Customizable Brand Logo Upload**: Integrated a fully customized logo upload component inside both the Invoice Pre-Flight and Business Report interactive print preview terminals. Users can now easily upload, change, or remove their brand logo directly on the virtual paper sheets. This logo is automatically rendered on physical/browser print outs, and is dynamically embedded into high-resolution exported PDFs with adaptive left-aligned templates, keeping your brand looking uniform and professional!
 
 ### [1.6.0] - 2026-05-22

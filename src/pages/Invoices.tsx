@@ -35,6 +35,7 @@ import autoTable from 'jspdf-autotable';
 import { useCurrency } from '../hooks/useCurrency';
 import { useConfig } from '../context/ConfigContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import InvoicePrintPreview from '../components/InvoicePrintPreview';
 
 export default function Invoices() {
   const { formatCurrency, currencySymbol } = useCurrency();
@@ -65,6 +66,7 @@ export default function Invoices() {
   const [paymentMethod, setPaymentMethod] = React.useState('Cash');
   const [submitting, setSubmitting] = React.useState(false);
   const [nextInvoiceNumber, setNextInvoiceNumber] = React.useState<string>('Loading...');
+  const [showPreview, setShowPreview] = React.useState(false);
 
   const fetchInvoices = async () => {
     setLoading(true);
@@ -699,18 +701,39 @@ export default function Invoices() {
                  </div>
               </div>
 
-              <button 
-                onClick={saveInvoice}
-                disabled={submitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-black py-5 rounded-3xl shadow-2xl shadow-blue-500/20 transition-all mt-4 flex items-center justify-center gap-2 active:scale-95"
-              >
-                {submitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    PROCESSING...
-                  </>
-                ) : 'GENERATE INVOICE'}
-              </button>
+              <div className="grid grid-cols-1 gap-3 mt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!selectedCustomer) {
+                      alert('Please select a customer first');
+                      return;
+                    }
+                    if (invoiceItems.length === 0) {
+                      alert('Please add at least one item first');
+                      return;
+                    }
+                    setShowPreview(true);
+                  }}
+                  className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold py-4 rounded-3xl transition-all flex items-center justify-center gap-2 active:scale-95 border border-slate-200 dark:border-slate-700 uppercase text-xs tracking-wider"
+                >
+                  <Eye className="w-5 h-5 text-blue-500" />
+                  Print Preview
+                </button>
+
+                <button 
+                  onClick={saveInvoice}
+                  disabled={submitting}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-black py-4 rounded-3xl shadow-2xl shadow-blue-500/20 transition-all flex items-center justify-center gap-2 active:scale-95 text-xs tracking-wider uppercase"
+                >
+                  {submitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      PROCESSING...
+                    </>
+                  ) : 'GENERATE INVOICE'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1063,6 +1086,53 @@ export default function Invoices() {
           </div>
         </div>
       )}
+
+      <InvoicePrintPreview
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        onConfirm={() => {
+          setShowPreview(false);
+          saveInvoice();
+        }}
+        onDownloadPDF={() => {
+          const draftInvoice = {
+            invoiceNumber: nextInvoiceNumber,
+            customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in Customer',
+            createdAt: invoiceDate,
+            items: invoiceItems,
+            subtotal,
+            discount,
+            taxAmount,
+            taxRate,
+            total,
+            paidAmount,
+            balance,
+            paymentMethod
+          };
+          generatePDF(draftInvoice);
+        }}
+        submitting={submitting}
+        invoiceNumber={nextInvoiceNumber}
+        invoiceDate={invoiceDate}
+        selectedCustomer={selectedCustomer}
+        invoiceItems={invoiceItems}
+        subtotal={subtotal}
+        discount={discount}
+        taxRate={taxRate}
+        taxAmount={taxAmount}
+        total={total}
+        paidAmount={paidAmount}
+        balance={balance}
+        paymentMethod={paymentMethod}
+        companyInfo={{
+          name: companyName,
+          address: companyAddress,
+          phone: companyPhone,
+          email: companyEmail
+        }}
+        currencySymbol={currencySymbol}
+        formatCurrency={formatCurrency}
+      />
     </div>
   );
 }

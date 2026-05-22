@@ -13,6 +13,7 @@ A comprehensive multi-user inventory and sales management system built for steel
 
 ## Updates
 ### [1.6.0] - 2026-05-22
+- **Unified Version Alignment**: Updated structural components including the sidebar navigation, secure login portal, and system manifest (`package.json`) to accurately reflect the unified version `v1.6.0`.
 - **Smooth Theme Cross-Fade Transitions**: Added a global 500ms easing transition for all layout components (aside, header, main, cards, and text) to create a premium cross-fade effect when toggling between light, dark, and system modes.
 - **Enhanced Light-Theme Contrast & Accessibility**: Upgraded standard gray and slate muted colors to darker, high-contrast values specifically in light-mode, ensuring all subheadings, placeholders, table cells, and form labels comfortably meet AA/AAA web accessibility guidelines.
 

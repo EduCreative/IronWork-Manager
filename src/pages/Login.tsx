@@ -182,7 +182,7 @@ export default function Login() {
         </div>
         
         <div className="mt-8 text-center text-gray-400 dark:text-gray-600 text-xs uppercase tracking-[0.2em]">
-          Secure Industrial Portal v1.3.0
+          Secure Industrial Portal v1.6.0
         </div>
       </div>
     </div>

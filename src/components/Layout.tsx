@@ -146,7 +146,7 @@ export default function Layout({ userRole }: Props) {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-xl font-black text-gray-900 dark:text-white leading-none">{companyName.split(' ')[0]}</h1>
-                <span className="text-[10px] font-black text-blue-600 dark:text-blue-500 tracking-[0.2em] mt-1" title="App Version">v1.3.0</span>
+                <span className="text-[10px] font-black text-blue-600 dark:text-blue-500 tracking-[0.2em] mt-1" title="App Version">v1.6.0</span>
               </div>
             </div>
             <button 

@@ -9,8 +9,10 @@ import { auth, db } from '../lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { Hammer, Chrome } from 'lucide-react';
 import { logActivity } from '../lib/utils';
+import { useConfig } from '../context/ConfigContext';
 
 export default function Login() {
+  const { companyName } = useConfig();
   const [isLogin, setIsLogin] = React.useState(true);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -97,7 +99,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-2xl mb-4 shadow-lg shadow-blue-500/20">
             <Hammer className="text-white w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">ForgeSteel Manager</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{companyName}</h1>
           <p className="text-gray-500 dark:text-gray-400 italic">Advanced Industrial Solutions</p>
         </div>
 

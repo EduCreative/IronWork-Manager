@@ -28,6 +28,7 @@ import { collection, query, getDocs, limit, orderBy, where } from 'firebase/fire
 import { formatCurrency as baseFormatCurrency, cn, safeToDate } from '../lib/utils';
 import { useCurrency } from '../hooks/useCurrency';
 import { useNavigate } from 'react-router-dom';
+import { useConfig } from '../context/ConfigContext';
 
 ChartJS.register(
   CategoryScale,
@@ -43,6 +44,7 @@ ChartJS.register(
 
 export default function Dashboard() {
   const { formatCurrency } = useCurrency();
+  const { companyName } = useConfig();
   const navigate = useNavigate();
   const [stats, setStats] = React.useState<any>({
     todaySales: 0,
@@ -167,7 +169,7 @@ export default function Dashboard() {
 
   const handleExportReport = () => {
     const csvContent = [
-      ['Report Name', 'ForgeSteel Business Overview'],
+      ['Report Name', `${companyName} Business Overview`],
       ['Export Date', new Date().toLocaleString()],
       [''],
       ['Key Metrics'],
@@ -192,7 +194,8 @@ export default function Dashboard() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", `Forgysteel_Report_${new Date().toISOString().split('T')[0]}.csv`);
+    const sanitizedFileName = companyName.toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+    link.setAttribute("download", `${sanitizedFileName}_Report_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -255,7 +258,7 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Business Overview</h1>
-          <p className="text-gray-500 dark:text-gray-400">Welcome back to ForgeSteel Control Center.</p>
+          <p className="text-gray-500 dark:text-gray-400">Welcome back to {companyName} Control Center.</p>
         </div>
         <div className="flex gap-2">
           <button 

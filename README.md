@@ -12,6 +12,10 @@ A comprehensive multi-user inventory and sales management system built for steel
 - Multi-user Authentication
 
 ## Updates
+### [1.5.2] - 2026-05-22
+- **Global Dynamic Branding Integration**: Replaced remaining hardcoded "ForgeSteel" strings on the Login and Dashboard pages to pull from your real-time cloud configuration, ensuring a unified, fully rebranded "IronWork Manager" brand experience.
+- **Dynamic Configuration fallbacks**: Updated system fallbacks in `ConfigContext.tsx` to "IronWork Manager" by default for fresh sessions prior to user-defined customizations.
+
 ### [1.5.1] - 2026-05-22
 - **Branding Update**: Rebranded the entire application reference to **IronWork Manager** and updated the primary browser title.
 - **Custom SVG Favicon**: Built a responsive, modern industrial vector SVG favicon representing steel structures and the 'IronWork' brand.

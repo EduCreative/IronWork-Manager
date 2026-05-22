@@ -17,7 +17,7 @@ interface ConfigContextType {
 
 const ConfigContext = createContext<ConfigContextType>({
   currencySymbol: 'Rs.',
-  companyName: 'ForgeSteel Fabrication',
+  companyName: 'IronWork Manager',
   companyAddress: '',
   companyPhone: '',
   companyEmail: '',
@@ -33,7 +33,7 @@ export const useConfig = () => useContext(ConfigContext);
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [config, setConfig] = useState<ConfigContextType>({
     currencySymbol: localStorage.getItem('global_currency_symbol') || 'Rs.',
-    companyName: localStorage.getItem('global_company_name') || 'ForgeSteel Fabrication',
+    companyName: localStorage.getItem('global_company_name') || 'IronWork Manager',
     companyAddress: localStorage.getItem('global_company_address') || '',
     companyPhone: localStorage.getItem('global_company_phone') || '',
     companyEmail: localStorage.getItem('global_company_email') || '',
@@ -50,7 +50,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (docSnap.exists()) {
         const data = docSnap.data();
         const newSymbol = data.currencySymbol || 'Rs.';
-        const newCompanyName = data.companyName || 'ForgeSteel Fabrication';
+        const newCompanyName = data.companyName || 'IronWork Manager';
         const newCompanyAddress = data.companyAddress || '';
         const newCompanyPhone = data.companyPhone || '';
         const newCompanyEmail = data.companyEmail || '';

@@ -1,4 +1,4 @@
-# ForgeSteel Inventory Control
+# IronWork Manager
 
 A comprehensive multi-user inventory and sales management system built for steel fabrication businesses.
 
@@ -12,6 +12,10 @@ A comprehensive multi-user inventory and sales management system built for steel
 - Multi-user Authentication
 
 ## Updates
+### [1.5.1] - 2026-05-22
+- **Branding Update**: Rebranded the entire application reference to **IronWork Manager** and updated the primary browser title.
+- **Custom SVG Favicon**: Built a responsive, modern industrial vector SVG favicon representing steel structures and the 'IronWork' brand.
+
 ### [1.5.0] - 2026-05-22
 - **Expenses Analysis Component**: Created a high-precision, stacked bar chart report reflecting live expense allocation and category cost trends over the last 6 months.
 - **Low Stock Notification Badge**: Integrated a real-time reactive counter on the sidebar to highlight items below critical stock limits.

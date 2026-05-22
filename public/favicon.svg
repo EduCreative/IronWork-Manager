@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="110" fill="#18181b"/>
+  <!-- Glowing circle behind -->
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#f97316" stroke-dasharray="10 15" stroke-width="6" opacity="0.4"/>
+  <!-- Main girder lines -->
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left leg of W -->
+    <line x1="160" y1="180" x2="210" y2="340" stroke="#a1a1aa" stroke-width="28"/>
+    <!-- Center leg of W + custom Iron Pillar forming I -->
+    <line x1="210" y1="340" x2="256" y2="200" stroke="#f97316" stroke-width="32"/>
+    <line x1="256" y1="200" x2="302" y2="340" stroke="#f97316" stroke-width="32"/>
+    <!-- Right leg of W -->
+    <line x1="302" y1="340" x2="352" y2="180" stroke="#a1a1aa" stroke-width="28"/>
+    <!-- Bold Top cross-girder representing construction/heavy iron works -->
+    <line x1="140" y1="160" x2="372" y2="160" stroke="#f4f4f5" stroke-width="36"/>
+    <!-- Glow effect overlay -->
+    <circle cx="256" cy="270" r="30" fill="#f97316" opacity="0.6"/>
+    <circle cx="256" cy="270" r="15" fill="#fdba74"/>
+  </g>
+</svg>

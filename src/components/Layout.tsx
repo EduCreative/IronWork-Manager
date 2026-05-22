@@ -24,7 +24,7 @@ import {
   Monitor
 } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, onSnapshot } from 'firebase/firestore';
 import { cn } from '../lib/utils';
 import { useConfig } from '../context/ConfigContext';
 import { useProgress } from '../context/ProgressContext';
@@ -37,7 +37,22 @@ export default function Layout({ userRole }: Props) {
   const { themeMode, lightBg, lightText, darkBg, darkText, companyName } = useConfig();
   const { progress, message } = useProgress();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [lowStockCount, setLowStockCount] = React.useState(0);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
+      const count = snapshot.docs.filter(doc => {
+        const data = doc.data();
+        return (data.currentStock || 0) <= (data.minStock || 0);
+      }).length;
+      setLowStockCount(count);
+    }, (error) => {
+      console.error("Error listening to products collection:", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Handle Theme Mode & Custom Colors
   React.useEffect(() => {
@@ -157,10 +172,22 @@ export default function Layout({ userRole }: Props) {
                 title={`Go to ${item.name}`}
               >
                 {({ isActive }) => (
-                  <>
-                    <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400")} />
-                    {item.name}
-                  </>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3">
+                      <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400")} />
+                      <span>{item.name}</span>
+                    </div>
+                    {item.name === 'Inventory' && lowStockCount > 0 && (
+                      <span className={cn(
+                        "text-[10px] font-black px-2 py-0.5 rounded-full leading-none transition-colors",
+                        isActive 
+                          ? "bg-white text-blue-600 shadow-sm" 
+                          : "bg-amber-500 text-white dark:bg-amber-500/20 dark:text-amber-400"
+                      )}>
+                        {lowStockCount}
+                      </span>
+                    )}
+                  </div>
                 )}
               </NavLink>
             ))}

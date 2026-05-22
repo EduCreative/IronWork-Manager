@@ -70,3 +70,205 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-300 dark:bg-gray-800 rounded-full hover:bg-gray-400 dark:hover:bg-gray-700;
 }
+
+/* Print-specific stylesheet */
+@media print {
+  /* 1. Page Margin & Size Configuration */
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+
+  /* 2. Base Reset for Printing */
+  html, body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Override custom theme variable colors for flawless high-contrast light prints */
+  :root, .dark {
+    --theme-bg: #ffffff !important;
+    --theme-text: #0f172a !important;
+    --theme-card-bg: #ffffff !important;
+    --theme-card-border: #cbd5e1 !important;
+  }
+
+  /* 3. Elements to hide entirely during prints (Navigation, UI chrome, etc.) */
+  aside,
+  header,
+  footer,
+  nav,
+  .no-print,
+  button,
+  input,
+  select,
+  textarea,
+  .fixed.inset-0.z-\[110\], /* record payment and other nested overlays */
+  [title*="Close"],
+  [title*="Download"],
+  [title*="Export"],
+  [title*="Filter"],
+  [title*="Record Payment"],
+  [title*="Notifications"] {
+    display: none !important;
+  }
+
+  /* 4. Layout Corrections for Full-Width Page Printing */
+  #root > div {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Unset sidebar left padding or absolute offset on the page content block */
+  .lg\:ml-64, [class*="lg:ml-64"], [class*="ml-0"] {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* 5. Transform open Modals to print perfectly (Multi-Page Flow) */
+  /* Remove fixed scrolling container constraints and convert to natural page elements */
+  div.fixed.inset-0[class*="bg-black"],
+  div.fixed.inset-0.z-\[100\],
+  div.fixed.inset-0.z-\[80\] {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    z-index: auto !important;
+  }
+
+  /* The actual modal content card */
+  div.fixed.inset-0[class*="bg-black"] > div,
+  div.fixed.inset-0.z-\[100\] > div,
+  div.fixed.inset-0.z-\[80\] > div {
+    position: static !important;
+    display: block !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background-color: #ffffff !important;
+    overflow: visible !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* Remove scrollbars and scroll wrappers inside modal body views */
+  div.fixed.inset-0[class*="bg-black"] [class*="overflow-y-auto"],
+  div.fixed.inset-0.z-\[100\] [class*="overflow-y-auto"],
+  div.fixed.inset-0.z-\[80\] [class*="overflow-y-auto"] {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 6. Typography & Table Styling for Clean Print */
+  h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-color: #cbd5e1 !important;
+    page-break-inside: auto !important;
+  }
+
+  thead {
+    display: table-header-group !important; /* Force theader on subsequent pages */
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  th, td {
+    border-bottom: 1px solid #cbd5e1 !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Hide columns in tables that only contain actions (like details, edit, delete, etc.) */
+  th:last-child:has(button), 
+  td:last-child:has(button),
+  td:has(button):last-child {
+    display: none !important;
+  }
+
+  /* 7. Page Break Control Helpers */
+  .page-card, .bg-white, .bg-theme-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  .break-before {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  .break-after {
+    break-after: page !important;
+    page-break-after: always !important;
+  }
+
+  /* Ensure canvas charts size themselves nicely to the printed margins */
+  canvas, svg {
+    max-width: 100% !important;
+    height: auto !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Maintain layout columns as side-by-side but proportional */
+  .grid {
+    display: grid !important;
+    gap: 1.5rem !important;
+  }
+  
+  [class*="md:grid-cols-3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  [class*="grid-cols-2"], [class*="lg:grid-cols-2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

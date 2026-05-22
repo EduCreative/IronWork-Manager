@@ -954,11 +954,19 @@ export default function Invoices() {
                 Close
               </button>
               <button
+                onClick={() => window.print()}
+                className="flex-1 py-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-black rounded-2xl border border-theme-border flex items-center justify-center gap-2 active:scale-95 transition-all"
+                title="Print this invoice directly"
+              >
+                <Printer className="w-5 h-5" />
+                Print
+              </button>
+              <button
                 onClick={() => {
                   generatePDF(viewingInvoice);
                   setViewingInvoice(null);
                 }}
-                className="flex-[2] py-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-black rounded-2xl shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 active:scale-95 transition-all"
+                className="flex-[1.5] py-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-black rounded-2xl shadow-xl shadow-blue-500/20 flex items-center justify-center gap-2 active:scale-95 transition-all"
                 title="Download this invoice as a PDF file"
               >
                 <Download className="w-5 h-5" />

@@ -276,6 +276,31 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Low Stock Alert Banner */}
+      {stats.lowStockItems > 0 && (
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 bg-amber-50 dark:bg-amber-950/10 border border-amber-200 dark:border-amber-900/30 rounded-3xl animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex gap-4">
+            <div className="p-3 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-2xl flex-shrink-0 self-start md:self-center">
+              <AlertTriangle className="w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-amber-800 dark:text-amber-400">Low Stock Alert</h2>
+              <p className="text-xs text-amber-700 dark:text-amber-500 mt-1 font-medium">
+                There are <span className="font-extrabold">{stats.lowStockItems}</span> item{stats.lowStockItems > 1 ? 's' : ''} at or below their defined minimum stock level. Please review to prevent raw material and fabrication bottlenecks.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => navigate('/inventory')}
+            className="w-full md:w-auto px-4 py-2.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-lg shadow-amber-600/10 transition-all flex items-center justify-center gap-2 whitespace-nowrap self-stretch md:self-auto cursor-pointer"
+            title="Go to Inventory page"
+          >
+            Review Inventory
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Primary Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((stat, i) => (

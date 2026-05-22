@@ -12,6 +12,10 @@ A comprehensive multi-user inventory and sales management system built for steel
 - Multi-user Authentication
 
 ## Updates
+### [1.6.0] - 2026-05-22
+- **Smooth Theme Cross-Fade Transitions**: Added a global 500ms easing transition for all layout components (aside, header, main, cards, and text) to create a premium cross-fade effect when toggling between light, dark, and system modes.
+- **Enhanced Light-Theme Contrast & Accessibility**: Upgraded standard gray and slate muted colors to darker, high-contrast values specifically in light-mode, ensuring all subheadings, placeholders, table cells, and form labels comfortably meet AA/AAA web accessibility guidelines.
+
 ### [1.5.2] - 2026-05-22
 - **Global Dynamic Branding Integration**: Replaced remaining hardcoded "ForgeSteel" strings on the Login and Dashboard pages to pull from your real-time cloud configuration, ensuring a unified, fully rebranded "IronWork Manager" brand experience.
 - **Dynamic Configuration fallbacks**: Updated system fallbacks in `ConfigContext.tsx` to "IronWork Manager" by default for fresh sessions prior to user-defined customizations.

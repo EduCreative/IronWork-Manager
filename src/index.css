@@ -28,7 +28,7 @@
   }
 
   body {
-    @apply font-sans transition-colors duration-300;
+    @apply font-sans;
     background-color: var(--theme-bg);
     color: var(--theme-text);
   }
@@ -38,8 +38,75 @@
     color: var(--theme-text);
   }
 
+  /* Smooth Cross-Fade Theme Switch Transitions */
+  body, 
+  aside, 
+  header, 
+  main,
+  div,
+  p,
+  span,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  th, 
+  td, 
+  tr,
+  input, 
+  select, 
+  textarea, 
+  button, 
+  label,
+  a {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Accessibility & Light Theme Readability Enhancer */
+  html:not(.dark) {
+    /* Map faint text elements to high-contrast readable alternatives in light mode */
+    .text-slate-400, .text-gray-400 {
+      color: #4b5563 !important; /* High-contrast charcoal gray */
+    }
+    
+    .text-slate-500, .text-gray-500 {
+      color: #27272a !important; /* Deep neutral dark text */
+    }
+
+    .text-slate-600, .text-gray-600 {
+      color: #18181b !important; /* Strong readable body text */
+    }
+
+    /* Boost helper text, table column headers, and sidebars */
+    th, thead th, [class*="text-slate-500"], [class*="text-gray-500"] {
+      color: #27272a !important;
+    }
+
+    /* Enhance inputs placeholders & selections */
+    input::placeholder, select::placeholder, textarea::placeholder {
+      color: #4b5563 !important;
+    }
+
+    label {
+      opacity: 0.95 !important;
+      color: #18181b !important;
+    }
+
+    /* Specific elements on list and description views */
+    .text-gray-500.dark\:text-gray-400,
+    .text-slate-500.dark\:text-slate-400,
+    [class*="text-slate-400"],
+    [class*="text-gray-400"] {
+      color: #3f3f46 !important;
+    }
+  }
+
   input, select, textarea {
-    @apply bg-theme-bg text-theme-text border border-theme-border rounded-xl px-4 py-2.5 text-sm ring-offset-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-theme-bg text-theme-text border border-theme-border rounded-xl px-4 py-2.5 text-sm ring-offset-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   input[type="number"] {

@@ -8,7 +8,8 @@ import {
   Clock,
   ArrowUpRight,
   ArrowDownRight,
-  FileDown
+  FileDown,
+  Printer
 } from 'lucide-react';
 import { 
   Chart as ChartJS, 
@@ -29,6 +30,7 @@ import { formatCurrency as baseFormatCurrency, cn, safeToDate } from '../lib/uti
 import { useCurrency } from '../hooks/useCurrency';
 import { useNavigate } from 'react-router-dom';
 import { useConfig } from '../context/ConfigContext';
+import ReportPrintPreview from '../components/ReportPrintPreview';
 
 ChartJS.register(
   CategoryScale,
@@ -44,7 +46,8 @@ ChartJS.register(
 
 export default function Dashboard() {
   const { formatCurrency } = useCurrency();
-  const { companyName } = useConfig();
+  const { companyName, companyAddress, companyPhone, companyEmail } = useConfig();
+  const [showPreview, setShowPreview] = React.useState(false);
   const navigate = useNavigate();
   const [stats, setStats] = React.useState<any>({
     todaySales: 0,
@@ -262,12 +265,12 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-2">
           <button 
-            onClick={handleExportReport}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
-            title="Download full business report"
+            onClick={() => setShowPreview(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-[1.02]"
+            title="Open report print preview"
           >
-            <FileDown className="w-4 h-4" />
-            Export Report
+            <Printer className="w-4 h-4" />
+            Print Report
           </button>
           <button 
             onClick={() => navigate('/invoices', { state: { openCreator: true } })}
@@ -432,6 +435,52 @@ export default function Dashboard() {
           </table>
         </div>
       </div>
+
+      <ReportPrintPreview
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        title="Business Overview Audit Report"
+        subtitle={`${companyName} System Overview Executive Summary`}
+        filenamePrefix="Business_Overview"
+        metrics={[
+          { label: "Month Sales", value: formatCurrency(stats.monthlySales), colorClass: "text-blue-600" },
+          { label: "Unpaid Balance", value: formatCurrency(stats.pendingPayments), colorClass: "text-amber-600" },
+          { label: "Assets Value", value: formatCurrency(stats.stockValue), colorClass: "text-green-600" }
+        ]}
+        sections={[
+          {
+            title: "Executive Key Operational KPIs",
+            description: "Aggregated performance indices across current ranges",
+            headers: ["Business Dimension Sector", "Audited Value Status"],
+            rows: [
+              ["Today's Emitted Sales Volume", formatCurrency(stats.todaySales)],
+              ["Running Month Sales Ledger", formatCurrency(stats.monthlySales)],
+              ["Outstanding Client Receivables", formatCurrency(stats.amountReceivables)],
+              ["Outstanding Supplier Payables", formatCurrency(stats.amountPayables)],
+              ["Total Raw Inventory Value Asset", formatCurrency(stats.stockValue)],
+              ["Deficient Low Stock Warnings", `${stats.lowStockItems} Items flagged`]
+            ]
+          },
+          {
+            title: "Recent Sales Transactions Audit Trail",
+            description: "Chronological ledger record of custom invoices processed",
+            headers: ["Invoice #", "Customer Name", "Total Amount", "Fulfillment Status", "Emanated Date"],
+            rows: stats.recentInvoices.map((inv: any) => [
+              inv.number || "N/A",
+              inv.customer || "Walk-in Customer",
+              formatCurrency(inv.amount),
+              (inv.status || "unpaid").toUpperCase(),
+              inv.date || "N/A"
+            ])
+          }
+        ]}
+        companyInfo={{
+          name: companyName,
+          address: companyAddress,
+          phone: companyPhone,
+          email: companyEmail
+        }}
+      />
     </div>
   );
 }

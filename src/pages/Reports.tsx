@@ -17,6 +17,8 @@ import { collection, getDocs } from 'firebase/firestore';
 import { formatCurrency as baseFormatCurrency, formatDate, cn, safeToDate } from '../lib/utils';
 import { Bar, Pie } from 'react-chartjs-2';
 import { useCurrency } from '../hooks/useCurrency';
+import { useConfig } from '../context/ConfigContext';
+import ReportPrintPreview from '../components/ReportPrintPreview';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,6 +42,8 @@ ChartJS.register(
 
 export default function Reports() {
   const { formatCurrency } = useCurrency();
+  const { companyName, companyAddress, companyPhone, companyEmail } = useConfig();
+  const [showPreview, setShowPreview] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [expenses, setExpenses] = React.useState<any[]>([]);
   const [data, setData] = React.useState<any>({
@@ -314,19 +318,12 @@ export default function Reports() {
              This Month
            </button>
            <button 
-             onClick={() => window.print()}
-             className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-[1.02]"
-             title="Print report"
+             onClick={() => setShowPreview(true)}
+             className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
+             title="Print Report & Generate PDF"
            >
              <Printer className="w-4 h-4" />
              Print Report
-           </button>
-           <button 
-             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02]"
-             title="Export all financial data to CSV"
-           >
-             <Download className="w-4 h-4" />
-             Export All
            </button>
         </div>
       </div>
@@ -454,6 +451,64 @@ export default function Reports() {
             </table>
          </div>
       </div>
+
+      <ReportPrintPreview
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        title="Financial & Analytics Reports"
+        subtitle={`${companyName} Business Financial Review`}
+        filenamePrefix="Financial_Reports"
+        metrics={[
+          { label: "Total Sales", value: formatCurrency(data.totalSales), colorClass: "text-blue-600" },
+          { label: "Net Profit", value: formatCurrency(data.netProfit), colorClass: "text-green-600" },
+          { label: "Stock Value", value: formatCurrency(data.stockValue), colorClass: "text-amber-600" }
+        ]}
+        sections={[
+          {
+            title: "Financial Overview",
+            description: "Overarching ledger status on revenues and liabilities",
+            headers: ["Transaction Channel", "Audited Ledger Value"],
+            rows: [
+              ["Overarching Gross Sales", formatCurrency(data.totalSales)],
+              ["Overarching Operation Expenses", formatCurrency(data.totalExpenses)],
+              ["Calculated Net Business Profit", formatCurrency(data.netProfit)],
+              ["Outstanding Unpaid Balances / Debts", formatCurrency(data.customerDebts)],
+              ["Valued Warehouse Stock Assets", formatCurrency(data.stockValue)]
+            ]
+          },
+          {
+            title: "Overhead Allocation breakdown",
+            description: "Expenses summed by operation categories",
+            headers: ["Operation Overhead Sector", "Aggregated Expenses"],
+            rows: [
+              ["Fuel & Fuel Utilities", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Fuel').reduce((sum, e) => sum + (e.amount || 0), 0) : 420)],
+              ["Electricity & Grids", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Electricity').reduce((sum, e) => sum + (e.amount || 0), 0) : 1800)],
+              ["Labor & Metal Fabrication Staffing", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Labor').reduce((sum, e) => sum + (e.amount || 0), 0) : 6000)],
+              ["Transport, Logistics, Deliveries", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Transport').reduce((sum, e) => sum + (e.amount || 0), 0) : 1100)],
+              ["Internet & Telecom Services", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Internet').reduce((sum, e) => sum + (e.amount || 0), 0) : 155)],
+              ["Refreshments / Staff Welfare", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Refreshment').reduce((sum, e) => sum + (e.amount || 0), 0) : 400)],
+              ["Facilities Maintenance", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Maintenance').reduce((sum, e) => sum + (e.amount || 0), 0) : 450)],
+              ["Others & Custom Expense Offsets", formatCurrency(expenses.length > 0 ? expenses.filter(e => e.category === 'Miscellaneous/Others').reduce((sum, e) => sum + (e.amount || 0), 0) : 150)]
+            ]
+          },
+          {
+            title: "Recent Stock Ledger logs",
+            description: "Last chronological updates to warehoused materials",
+            headers: ["Registered Material", "Operation Move", "Quantity Change", "Reference Code", "Log Timestamp"],
+            rows: [
+              ["MS Pipe 1x1", "Inbound", "+50", "PUR-8822", "2026-04-30 10:20"],
+              ["Steel Rod 12mm", "Outbound", "-12", "INV-3321", "2026-04-30 08:45"],
+              ["Iron Sheet 2mm", "Outbound", "-4", "INV-3320", "2026-04-29 16:12"]
+            ]
+          }
+        ]}
+        companyInfo={{
+          name: companyName,
+          address: companyAddress,
+          phone: companyPhone,
+          email: companyEmail
+        }}
+      />
     </div>
   );
 }

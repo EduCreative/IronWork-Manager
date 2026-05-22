@@ -11,8 +11,10 @@ import {
   AlertCircle,
   Edit,
   Trash2,
-  FileDown
+  FileDown,
+  Printer
 } from 'lucide-react';
+import ReportPrintPreview from '../components/ReportPrintPreview';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { db } from '../lib/firebase';
@@ -34,6 +36,7 @@ import { useConfig } from '../context/ConfigContext';
 export default function Inventory() {
   const { formatCurrency } = useCurrency();
   const { companyName, companyAddress, companyPhone, companyEmail } = useConfig();
+  const [showPreview, setShowPreview] = React.useState(false);
   const [products, setProducts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -254,12 +257,12 @@ export default function Inventory() {
         </div>
         <div className="flex items-center gap-2">
           <button 
-            onClick={generatePDF}
-            className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 border border-gray-200 dark:border-gray-700 transition-all shadow-sm active:scale-95"
+            onClick={() => setShowPreview(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-bold shadow-sm transition-all hover:scale-[1.02]"
             title="Download/Print current inventory list as PDF"
           >
-            <FileDown className="w-4 h-4" />
-            Export Report
+            <Printer className="w-4 h-4 text-blue-500" />
+            Print Report
           </button>
           <button 
             onClick={() => { setEditingProduct(null); setIsModalOpen(true); }}
@@ -661,6 +664,40 @@ export default function Inventory() {
           </div>
         </div>
       )}
+
+      <ReportPrintPreview
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        title="Inventory Audit List Report"
+        subtitle={`${companyName} Stock Levels Management Log`}
+        filenamePrefix="Inventory"
+        metrics={[
+          { label: "Total Unique Products", value: `${filteredProducts.length} Items`, colorClass: "text-blue-600" },
+          { label: "Low Stock Alert Items", value: `${filteredProducts.filter(p => p.currentStock <= p.minStock).length} Items`, colorClass: "text-red-500" },
+          { label: "Total Catalog Items", value: `${products.length} registered`, colorClass: "text-gray-600" }
+        ]}
+        sections={[
+          {
+            title: "Current Inventory Stock Levels",
+            description: "Listing of warehoused products and structural materials matching criteria",
+            headers: ["Code", "Product Name", "Category", "Current Stock", "Min Stock Alert Level", "Unit Sale Price"],
+            rows: filteredProducts.map(p => [
+              p.code || "N/A",
+              p.name || "N/A",
+              p.category || "General",
+              `${p.currentStock || 0} ${p.unitType || 'kg'}`,
+              `${p.minStock || 0} ${p.unitType || 'kg'}`,
+              formatCurrency(p.salePrice || p.price || 0)
+            ])
+          }
+        ]}
+        companyInfo={{
+          name: companyName,
+          address: companyAddress,
+          phone: companyPhone,
+          email: companyEmail
+        }}
+      />
     </div>
   );
 }

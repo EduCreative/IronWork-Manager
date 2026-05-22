@@ -13,6 +13,7 @@ A comprehensive multi-user inventory and sales management system built for steel
 
 ## Updates
 ### [1.6.0] - 2026-05-22
+- **Unified "Print Report" Interactive Preview**: Upgraded traditional "Export Report" CSV downloads for the Business Overview, Inventory Management, and Financial Analytics dashboards. Replaced empty file saves with a professional "Print & PDF Preview Terminal". Managers can now review simulated A4 sheets, customize metrics layout visually, issue real physical print sheets directly, or generate pristine multi-page PDFs locally.
 - **Innovative "Print Preview" Modal**: Added a professional "Print Preview" option to the Invoice Creation screen. Operators and managers can now pre-flight all details onto an A4-sized digital paper simulation before finalizing a sale. This screen supports printing to physical printers, downloading real-time PDF drafts, and analyzing dynamic customer ledger impacts beforehand.
 - **Unified Version Alignment**: Updated structural components including the sidebar navigation, secure login portal, and system manifest (`package.json`) to accurately reflect the unified version `v1.6.0`.
 - **Smooth Theme Cross-Fade Transitions**: Added a global 500ms easing transition for all layout components (aside, header, main, cards, and text) to create a premium cross-fade effect when toggling between light, dark, and system modes.

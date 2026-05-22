@@ -11,7 +11,9 @@ import {
   Mail,
   User,
   Calendar,
-  Layers
+  Layers,
+  Upload,
+  Trash2
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -80,6 +82,28 @@ export default function InvoicePrintPreview({
   currencySymbol,
   formatCurrency
 }: InvoicePrintPreviewProps) {
+  const [logo, setLogo] = React.useState<string | null>(() => {
+    return localStorage.getItem('global_company_logo');
+  });
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        localStorage.setItem('global_company_logo', base64String);
+        setLogo(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearLogo = () => {
+    localStorage.removeItem('global_company_logo');
+    setLogo(null);
+  };
+
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -163,6 +187,11 @@ export default function InvoicePrintPreview({
               .text-green-600 { color: #16a34a; }
               .text-red-500 { color: #ef4444; }
               .text-red-600 { color: #dc2626; }
+              .no-print { display: none !important; }
+              .shrink-0 { flex-shrink: 0; }
+              .w-24 { width: 6rem; }
+              .h-24 { height: 6rem; }
+              .object-contain { object-fit: contain; }
               
               table {
                 width: 100%;
@@ -279,30 +308,53 @@ export default function InvoicePrintPreview({
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-blue-600" />
 
                 {/* Corporate Info Header */}
-                <div className="text-center mb-8">
-                  <h1 className="text-3xl font-black uppercase text-slate-900 tracking-tight font-sans">
-                    {companyInfo.name || "IRONWORK MANAGER"}
-                  </h1>
-                  {companyInfo.address && (
-                    <p className="text-xs text-slate-500 font-medium mt-1.5 leading-relaxed max-w-sm mx-auto">
-                      {companyInfo.address}
+                <div className="flex justify-between items-start mb-8 border-b border-slate-100 pb-6 flex-wrap gap-4">
+                  <div className="flex items-start gap-4">
+                    {/* Customizable Logo Container */}
+                    <div className={`relative group shrink-0 w-24 h-24 border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl flex flex-col items-center justify-center p-1 bg-slate-50 overflow-hidden cursor-pointer transition-colors ${!logo ? 'no-print' : ''}`}>
+                      {logo ? (
+                        <>
+                          <img src={logo} alt="Brand Logo" className="w-full h-full object-contain" />
+                          <div className="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 no-print">
+                            <label className="text-[10px] text-white font-bold cursor-pointer hover:underline">
+                              Replace
+                              <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                            </label>
+                            <button onClick={(e) => { e.stopPropagation(); clearLogo(); }} className="text-[10px] text-red-400 font-bold hover:underline">
+                              Remove
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <label className="w-full h-full flex flex-col items-center justify-center gap-1 cursor-pointer no-print p-2 text-center text-[10px] font-bold text-slate-400 hover:text-blue-500">
+                          <Building className="w-5 h-5 text-slate-400" />
+                          <span>Logo Upload</span>
+                          <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+                        </label>
+                      )}
+                    </div>
+
+                    <div className="text-left">
+                      <h1 className="text-2xl font-black uppercase tracking-tight text-slate-900">
+                        {companyInfo.name || "IRONWORK MANAGER"}
+                      </h1>
+                      {companyInfo.address && (
+                        <p className="text-xs text-slate-500 font-semibold mt-1 max-w-sm">
+                          {companyInfo.address}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-400 font-bold">
+                        {companyInfo.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-slate-400" />{companyInfo.phone}</span>}
+                        {companyInfo.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-slate-400" />{companyInfo.email}</span>}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="text-[9px] font-black tracking-widest uppercase text-slate-400 block mb-1">Invoice Status</span>
+                    <p className="text-xs font-black text-blue-600 uppercase tracking-widest bg-blue-50 border border-blue-100 px-2 py-0.5 rounded inline-block font-mono">
+                      PRE-FLIGHT
                     </p>
-                  )}
-                  
-                  <div className="flex items-center justify-center gap-4 mt-2.5 text-xs text-slate-400 font-medium border-t border-slate-100 pt-2.5 max-w-md mx-auto">
-                    {companyInfo.phone && (
-                      <span className="flex items-center gap-1">
-                        <Phone className="w-3.5 h-3.5 text-slate-400" />
-                        {companyInfo.phone}
-                      </span>
-                    )}
-                    {companyInfo.phone && companyInfo.email && <span className="text-slate-300">|</span>}
-                    {companyInfo.email && (
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-3.5 h-3.5 text-slate-400" />
-                        {companyInfo.email}
-                      </span>
-                    )}
                   </div>
                 </div>
 

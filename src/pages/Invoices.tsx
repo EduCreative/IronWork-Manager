@@ -270,11 +270,26 @@ export default function Invoices() {
 
   const generatePDF = (invoice: any) => {
     const doc = new jsPDF() as any;
+    const companyLogo = localStorage.getItem('global_company_logo');
+    
+    let textXShift = 105;
+    let textOptions: any = { align: 'center' };
+    
+    if (companyLogo) {
+      try {
+        const format = companyLogo.includes("png") ? "PNG" : "JPEG";
+        doc.addImage(companyLogo, format, 20, 10, 18, 18);
+        textXShift = 42;
+        textOptions = { align: 'left' };
+      } catch (e) {
+        console.warn("Could not insert company logo in Invoice PDF:", e);
+      }
+    }
     
     // Add Company Info
     doc.setFontSize(22);
     doc.setFont(undefined, 'bold');
-    doc.text(companyName.toUpperCase(), 105, 18, { align: 'center' });
+    doc.text(companyName.toUpperCase(), textXShift, 18, textOptions);
     
     doc.setFontSize(9);
     doc.setFont(undefined, 'normal');
@@ -282,7 +297,7 @@ export default function Invoices() {
     
     let headerY = 24;
     if (companyAddress) {
-      doc.text(companyAddress, 105, headerY, { align: 'center' });
+      doc.text(companyAddress, textXShift, headerY, textOptions);
       headerY += 5;
     }
     
@@ -292,7 +307,7 @@ export default function Invoices() {
     ].filter(Boolean).join('  |  ');
     
     if (contactInfo) {
-      doc.text(contactInfo, 105, headerY, { align: 'center' });
+      doc.text(contactInfo, textXShift, headerY, textOptions);
     }
     
     doc.setTextColor(0); // Reset to black

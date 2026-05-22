@@ -12,6 +12,9 @@ A comprehensive multi-user inventory and sales management system built for steel
 - Multi-user Authentication
 
 ## Updates
+### [1.6.1] - 2026-05-22
+- **Customizable Brand Logo Upload**: Integrated a fully customized logo upload component inside both the Invoice Pre-Flight and Business Report interactive print preview terminals. Users can now easily upload, change, or remove their brand logo directly on the virtual paper sheets. This logo is automatically rendered on physical/browser print outs, and is dynamically embedded into high-resolution exported PDFs with adaptive left-aligned templates, keeping your brand looking uniform and professional!
+
 ### [1.6.0] - 2026-05-22
 - **Unified "Print Report" Interactive Preview**: Upgraded traditional "Export Report" CSV downloads for the Business Overview, Inventory Management, and Financial Analytics dashboards. Replaced empty file saves with a professional "Print & PDF Preview Terminal". Managers can now review simulated A4 sheets, customize metrics layout visually, issue real physical print sheets directly, or generate pristine multi-page PDFs locally.
 - **Innovative "Print Preview" Modal**: Added a professional "Print Preview" option to the Invoice Creation screen. Operators and managers can now pre-flight all details onto an A4-sized digital paper simulation before finalizing a sale. This screen supports printing to physical printers, downloading real-time PDF drafts, and analyzing dynamic customer ledger impacts beforehand.

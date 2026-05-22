@@ -70,7 +70,7 @@ export default function Layout({ userRole }: Props) {
         root.style.setProperty('--theme-card-border', '#1e293b');
       } else {
         root.classList.remove('dark');
-        root.style.setProperty('--theme-bg', '#f8fafc');
+        root.style.setProperty('--theme-bg', lightBg || '#f8fafc');
         root.style.setProperty('--theme-text', lightText || '#0f172a');
         root.style.setProperty('--theme-card-bg', '#ffffff');
         root.style.setProperty('--theme-card-border', '#e2e8f0');

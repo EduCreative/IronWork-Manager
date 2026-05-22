@@ -95,7 +95,7 @@ export default function Users() {
                 <UserCircle className="w-8 h-8" />
               </div>
               <div>
-                <h3 className="font-bold text-lg dark:text-white flex items-center gap-2">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
                   {user.email}
                   {user.role === 'admin' && <ShieldCheck className="w-4 h-4 text-blue-500" />}
                 </h3>

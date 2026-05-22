@@ -302,7 +302,7 @@ export default function Reports() {
     <div className="space-y-8 pb-10">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold dark:text-white">Financial & Analytics Reports</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Financial & Analytics Reports</h1>
           <p className="text-gray-500 dark:text-gray-400">Deep dive into your fabrication business metrics.</p>
         </div>
         <div className="flex gap-2">
@@ -337,7 +337,7 @@ export default function Reports() {
               <span className="text-xs font-bold text-blue-500 uppercase tracking-widest">Total Sales</span>
               <TrendingUp className="w-5 h-5 text-green-500" />
            </div>
-           <p className="text-3xl font-bold dark:text-white">{formatCurrency(data.totalSales)}</p>
+           <p className="text-3xl font-bold text-gray-900 dark:text-white">{formatCurrency(data.totalSales)}</p>
            <p className="text-xs text-gray-400 mt-2">Gross revenue across all channels</p>
         </div>
         <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-2xl shadow-sm">
@@ -345,7 +345,7 @@ export default function Reports() {
               <span className="text-xs font-bold text-red-500 uppercase tracking-widest">Net Profit</span>
               <TrendingDown className="w-5 h-5 text-red-500" />
            </div>
-           <p className="text-3xl font-bold dark:text-white">{formatCurrency(data.netProfit)}</p>
+           <p className="text-3xl font-bold text-gray-900 dark:text-white">{formatCurrency(data.netProfit)}</p>
            <p className="text-xs text-gray-400 mt-2">After deducting costs and expenses</p>
         </div>
         <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-6 rounded-2xl shadow-sm">
@@ -353,14 +353,14 @@ export default function Reports() {
               <span className="text-xs font-bold text-amber-500 uppercase tracking-widest">Stock Value</span>
               <PieChart className="w-5 h-5 text-amber-500" />
            </div>
-           <p className="text-3xl font-bold dark:text-white">{formatCurrency(data.stockValue)}</p>
+           <p className="text-3xl font-bold text-gray-900 dark:text-white">{formatCurrency(data.stockValue)}</p>
            <p className="text-xs text-gray-400 mt-2">Invested capital in inventory</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-8 rounded-3xl shadow-sm">
-            <h3 className="text-xl font-bold dark:text-white mb-10 flex items-center gap-3">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-10 flex items-center gap-3">
               <BarChart3 className="text-blue-500" />
               Financial Breakdown
             </h3>
@@ -370,7 +370,7 @@ export default function Reports() {
          </div>
 
          <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-8 rounded-3xl shadow-sm">
-            <h3 className="text-xl font-bold dark:text-white mb-10">Sales Payment Status</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-10">Sales Payment Status</h3>
             <div className="h-60 flex justify-center">
                <Pie data={pieData} />
             </div>
@@ -381,7 +381,7 @@ export default function Reports() {
                </div>
                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700">
                   <p className="text-xs text-gray-500 uppercase font-bold mb-1">Top Selling</p>
-                  <p className="text-xl font-bold dark:text-white">MS Pipes</p>
+                  <p className="text-xl font-bold text-gray-900 dark:text-white">MS Pipes</p>
                </div>
             </div>
          </div>
@@ -391,7 +391,7 @@ export default function Reports() {
       <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-8 rounded-3xl shadow-sm">
          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-               <h3 className="text-xl font-bold dark:text-white flex items-center gap-3">
+               <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
                  <CreditCard className="text-red-500 w-6 h-6" />
                  Expenses Analysis
                </h3>
@@ -413,7 +413,7 @@ export default function Reports() {
 
       <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden shadow-sm">
          <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-            <h3 className="text-xl font-bold dark:text-white">Recent Stock Movements</h3>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Recent Stock Movements</h3>
             <button 
               className="text-blue-500 text-sm font-bold hover:underline"
               title="View full history of stock changes"
@@ -438,8 +438,8 @@ export default function Reports() {
                     { item: 'Steel Rod 12mm', action: 'Outbound', qty: '-12', ref: 'INV-3321', date: '2026-04-30 08:45' },
                     { item: 'Iron Sheet 2mm', action: 'Outbound', qty: '-4', ref: 'INV-3320', date: '2026-04-29 16:12' },
                   ].map((m, i) => (
-                    <tr key={i} className="dark:text-gray-300">
-                       <td className="p-4 font-bold dark:text-white">{m.item}</td>
+                    <tr key={i} className="text-gray-700 dark:text-gray-300">
+                       <td className="p-4 font-bold text-gray-900 dark:text-white">{m.item}</td>
                        <td className="p-4">
                           <span className={cn("px-2 py-1 rounded text-[10px] font-bold uppercase", m.action === 'Inbound' ? 'bg-green-100 text-green-700 dark:bg-green-900/20' : 'bg-red-100 text-red-700 dark:bg-red-900/20')}>
                              {m.action}

@@ -849,7 +849,7 @@ export default function Invoices() {
                   <Receipt className="w-5 h-5" />
                 </div>
                 <div>
-                   <h3 className="text-lg font-black dark:text-white leading-none">{viewingInvoice.invoiceNumber}</h3>
+                   <h3 className="text-lg font-black text-gray-900 dark:text-white leading-none">{viewingInvoice.invoiceNumber}</h3>
                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{formatDate(safeToDate(viewingInvoice.createdAt))}</span>
                 </div>
               </div>
@@ -865,7 +865,7 @@ export default function Invoices() {
               <div className="flex justify-between items-start">
                  <div>
                     <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Billed To</h4>
-                    <p className="text-lg font-black dark:text-white leading-tight">{viewingInvoice.customerName}</p>
+                    <p className="text-lg font-black text-gray-900 dark:text-white leading-tight">{viewingInvoice.customerName}</p>
                     <p className="text-sm text-gray-500 mt-1 dark:text-gray-400">Customer ID: {viewingInvoice.customerId}</p>
                  </div>
                  <div className="text-right">
@@ -894,10 +894,10 @@ export default function Invoices() {
                   <tbody className="divide-y divide-theme-border font-medium">
                     {viewingInvoice.items.map((item: any, i: number) => (
                       <tr key={i}>
-                        <td className="px-6 py-4 dark:text-white capitalize">{item.name}</td>
-                        <td className="px-6 py-4 dark:text-white">{item.quantity} {item.unitType}</td>
-                        <td className="px-6 py-4 dark:text-white text-right">{formatCurrency(item.price)}</td>
-                        <td className="px-6 py-4 dark:text-white text-right font-black">{formatCurrency(item.price * item.quantity)}</td>
+                        <td className="px-6 py-4 text-gray-900 dark:text-white capitalize">{item.name}</td>
+                        <td className="px-6 py-4 text-gray-700 dark:text-white">{item.quantity} {item.unitType}</td>
+                        <td className="px-6 py-4 text-gray-700 dark:text-white text-right">{formatCurrency(item.price)}</td>
+                        <td className="px-6 py-4 text-gray-900 dark:text-white text-right font-black">{formatCurrency(item.price * item.quantity)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -907,7 +907,7 @@ export default function Invoices() {
               <div className="space-y-3">
                  <div className="flex justify-between items-center px-4 py-2 bg-theme-bg/30 rounded-xl">
                     <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Subtotal</span>
-                    <span className="text-base font-black dark:text-white">{formatCurrency(viewingInvoice.subtotal)}</span>
+                    <span className="text-base font-black text-gray-900 dark:text-white">{formatCurrency(viewingInvoice.subtotal)}</span>
                  </div>
                  <div className="flex justify-between items-center px-4 py-2 bg-theme-bg/30 rounded-xl">
                     <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Discount</span>
@@ -987,7 +987,7 @@ export default function Invoices() {
                   <Banknote className="w-5 h-5" />
                 </div>
                 <div>
-                   <h3 className="text-lg font-black dark:text-white leading-none">Record Payment</h3>
+                   <h3 className="text-lg font-black text-gray-900 dark:text-white leading-none">Record Payment</h3>
                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{recordingPayment.invoiceNumber}</span>
                 </div>
               </div>
@@ -1003,7 +1003,7 @@ export default function Invoices() {
                <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 bg-theme-bg/50 rounded-2xl border border-theme-border">
                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Due</p>
-                     <p className="text-xl font-black dark:text-white">{formatCurrency(recordingPayment.total)}</p>
+                     <p className="text-xl font-black text-gray-900 dark:text-white">{formatCurrency(recordingPayment.total)}</p>
                   </div>
                   <div className="p-4 bg-theme-bg/50 rounded-2xl border border-theme-border">
                      <p className="text-[10px] font-black text-red-400 uppercase tracking-widest mb-1">Pending</p>

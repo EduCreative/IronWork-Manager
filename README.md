@@ -16,6 +16,8 @@ A comprehensive multi-user inventory and sales management system built for steel
 - **Unified Version Alignment**: Updated structural components including the sidebar navigation, secure login portal, and system manifest (`package.json`) to accurately reflect the unified version `v1.6.0`.
 - **Smooth Theme Cross-Fade Transitions**: Added a global 500ms easing transition for all layout components (aside, header, main, cards, and text) to create a premium cross-fade effect when toggling between light, dark, and system modes.
 - **Enhanced Light-Theme Contrast & Accessibility**: Upgraded standard gray and slate muted colors to darker, high-contrast values specifically in light-mode, ensuring all subheadings, placeholders, table cells, and form labels comfortably meet AA/AAA web accessibility guidelines.
+- **Manual Toggle Variant Integration for Tailwind v4**: Standardized class-toggled styling behaviors under Tailwind v4 by officially defining the class-based `@variant dark` utility within the core styling dictionary. This guarantees immediate dark styles responsiveness when toggling themes regardless of user OS media query states.
+- **Dashboard & Core View Polish**: Standardized strong explicit colors (`text-gray-900`/`text-gray-700`) for data values throughout the Invoices, Customer ledger search filters, User indices, and Expense charts, eliminating low-contrast and nested CSS invisibility issues completely.
 
 ### [1.5.2] - 2026-05-22
 - **Global Dynamic Branding Integration**: Replaced remaining hardcoded "ForgeSteel" strings on the Login and Dashboard pages to pull from your real-time cloud configuration, ensuring a unified, fully rebranded "IronWork Manager" brand experience.

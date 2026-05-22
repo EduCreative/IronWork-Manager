@@ -12,6 +12,11 @@ A comprehensive multi-user inventory and sales management system built for steel
 - Multi-user Authentication
 
 ## Updates
+### [1.5.0] - 2026-05-22
+- **Expenses Analysis Component**: Created a high-precision, stacked bar chart report reflecting live expense allocation and category cost trends over the last 6 months.
+- **Low Stock Notification Badge**: Integrated a real-time reactive counter on the sidebar to highlight items below critical stock limits.
+- **Low Stock Dashboard Alert**: Added an interactive warning banner on the main page to prevent inventory depletion.
+
 ### [1.4.0] - 2026-05-11
 - **Master Data Reset**: Implemented a "Danger Zone" in Settings to wipe all database collections, protected by an 11-digit master security key.
 - **Project Migration Infrastructure**: Added framework for isolating production data into dedicated Google Cloud/Firebase projects.

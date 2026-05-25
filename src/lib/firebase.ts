@@ -48,14 +48,37 @@ export const clearLocalStorageOverrides = () => {
   }
 };
 
+const cleanStringValue = (val: any): string | null => {
+  if (typeof val !== 'string') return null;
+  let s = val.trim();
+  // Clean up any double or single quotes wrapping the key/value due to copy-paste or platform var quoting
+  if ((s.startsWith("'") && s.endsWith("'")) || (s.startsWith('"') && s.endsWith('"'))) {
+    s = s.slice(1, -1).trim();
+  }
+  return s || null;
+};
+
+const getFirebaseValue = (key: string, envVal: any, localVal: any): string => {
+  const overridden = getLocalStorageValue(key);
+  if (overridden) return overridden;
+  
+  const localStr = cleanStringValue(localVal);
+  if (localStr) return localStr;
+  
+  const envStr = cleanStringValue(envVal);
+  if (envStr) return envStr;
+  
+  return '';
+};
+
 export const firebaseConfig = {
-  apiKey: getLocalStorageValue('FIREBASE_API_KEY') || import.meta.env.VITE_FIREBASE_API_KEY || localConfig.apiKey,
-  authDomain: getLocalStorageValue('FIREBASE_AUTH_DOMAIN') || import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || localConfig.authDomain,
-  projectId: getLocalStorageValue('FIREBASE_PROJECT_ID') || import.meta.env.VITE_FIREBASE_PROJECT_ID || localConfig.projectId,
-  storageBucket: getLocalStorageValue('FIREBASE_STORAGE_BUCKET') || import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || localConfig.storageBucket,
-  messagingSenderId: getLocalStorageValue('FIREBASE_MESSAGING_SENDER_ID') || import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || localConfig.messagingSenderId,
-  appId: getLocalStorageValue('FIREBASE_APP_ID') || import.meta.env.VITE_FIREBASE_APP_ID || localConfig.appId,
-  firestoreDatabaseId: getLocalStorageValue('FIREBASE_DATABASE_ID') || import.meta.env.VITE_FIREBASE_DATABASE_ID || localConfig.firestoreDatabaseId || '(default)',
+  apiKey: getFirebaseValue('FIREBASE_API_KEY', import.meta.env.VITE_FIREBASE_API_KEY, localConfig.apiKey),
+  authDomain: getFirebaseValue('FIREBASE_AUTH_DOMAIN', import.meta.env.VITE_FIREBASE_AUTH_DOMAIN, localConfig.authDomain),
+  projectId: getFirebaseValue('FIREBASE_PROJECT_ID', import.meta.env.VITE_FIREBASE_PROJECT_ID, localConfig.projectId),
+  storageBucket: getFirebaseValue('FIREBASE_STORAGE_BUCKET', import.meta.env.VITE_FIREBASE_STORAGE_BUCKET, localConfig.storageBucket),
+  messagingSenderId: getFirebaseValue('FIREBASE_MESSAGING_SENDER_ID', import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID, localConfig.messagingSenderId),
+  appId: getFirebaseValue('FIREBASE_APP_ID', import.meta.env.VITE_FIREBASE_APP_ID, localConfig.appId),
+  firestoreDatabaseId: getFirebaseValue('FIREBASE_DATABASE_ID', import.meta.env.VITE_FIREBASE_DATABASE_ID, localConfig.firestoreDatabaseId) || '(default)',
 };
 
 // Log loaded safe details for runtime debugging
@@ -63,15 +86,25 @@ console.log('[Firebase Init] Current Project:', firebaseConfig.projectId);
 console.log('[Firebase Init] Active Database Instance:', firebaseConfig.firestoreDatabaseId);
 console.log('[Firebase Init] Api Key configured:', firebaseConfig.apiKey ? 'YES' : 'NO');
 
-const app = initializeApp(firebaseConfig);
+export let app: any = null;
+export let db: any = null;
+export let auth: any = null;
+export let initError: string | null = null;
 
-// Initialize Firestore with long-polling enabled for stability in sandbox environments
-// Falls back gracefully to '(default)' if no database ID is specified
-export const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true,
-}, firebaseConfig.firestoreDatabaseId);
-
-export const auth = getAuth(app);
+try {
+  // Only attempt initialization if API key is provided, otherwise raise a descriptive error
+  if (!firebaseConfig.apiKey) {
+    throw new Error('Firebase API Key is missing or empty. Please configure it in the settings below.');
+  }
+  app = initializeApp(firebaseConfig);
+  db = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+  }, firebaseConfig.firestoreDatabaseId);
+  auth = getAuth(app);
+} catch (error: any) {
+  initError = error.message || String(error);
+  console.error('[Firebase Init] Critical error during Firebase initialization:', error);
+}
 
 export type FirestoreConnectionStatus = 'checking' | 'connected' | 'unavailable' | 'permission-denied' | 'error';
 export let firestoreStatus: FirestoreConnectionStatus = 'checking';
@@ -79,6 +112,11 @@ export let firestoreErrorDetails = '';
 
 // Connectivity Test
 export async function testConnection() {
+  if (initError || !db) {
+    firestoreStatus = 'error';
+    firestoreErrorDetails = initError || 'Firebase not initialized';
+    return;
+  }
   try {
     // Attempting to read a non-existent document from the server to verify connectivity
     // Using getDocFromServer ensures we aren't just hitting a local cache
@@ -100,4 +138,10 @@ export async function testConnection() {
   }
 }
 
-testConnection();
+// Only test connection if successfully initialized
+if (db) {
+  testConnection();
+} else {
+  firestoreStatus = 'error';
+  firestoreErrorDetails = initError || 'Firebase DB initialization skipped due to load error';
+}

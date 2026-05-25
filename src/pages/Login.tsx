@@ -60,6 +60,10 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     setError('');
+    if (!auth) {
+      setError('Firebase authentication service is not available because of a configuration or API Key issue. Please use the Settings & Troubleshooter section below to update your keys.');
+      return;
+    }
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
@@ -101,6 +105,10 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!auth) {
+      setError('Firebase authentication service is not available because of a configuration or API Key issue. Please use the Settings & Troubleshooter section below to update your keys.');
+      return;
+    }
     setLoading(true);
 
     try {

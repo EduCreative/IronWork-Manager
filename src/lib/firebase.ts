@@ -10,14 +10,44 @@ const mergedConfigFiles = { ...configFiles, ...fallbackConfigFiles };
 const configKey = Object.keys(mergedConfigFiles)[0];
 const localConfig = configKey ? (mergedConfigFiles[configKey] as any).default || mergedConfigFiles[configKey] : {};
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || localConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || localConfig.authDomain,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || localConfig.projectId,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || localConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || localConfig.messagingSenderId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || localConfig.appId,
-  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_DATABASE_ID || localConfig.firestoreDatabaseId || '(default)',
+const getLocalStorageValue = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key);
+  } catch (e) {
+    return null;
+  }
+};
+
+export const setLocalStorageOverride = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    console.error('Failed to set localStorage override:', e);
+  }
+};
+
+export const clearLocalStorageOverrides = () => {
+  try {
+    localStorage.removeItem('FIREBASE_API_KEY');
+    localStorage.removeItem('FIREBASE_AUTH_DOMAIN');
+    localStorage.removeItem('FIREBASE_PROJECT_ID');
+    localStorage.removeItem('FIREBASE_STORAGE_BUCKET');
+    localStorage.removeItem('FIREBASE_MESSAGING_SENDER_ID');
+    localStorage.removeItem('FIREBASE_APP_ID');
+    localStorage.removeItem('FIREBASE_DATABASE_ID');
+  } catch (e) {
+    console.error('Failed to clear localStorage overrides:', e);
+  }
+};
+
+export const firebaseConfig = {
+  apiKey: getLocalStorageValue('FIREBASE_API_KEY') || import.meta.env.VITE_FIREBASE_API_KEY || localConfig.apiKey,
+  authDomain: getLocalStorageValue('FIREBASE_AUTH_DOMAIN') || import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || localConfig.authDomain,
+  projectId: getLocalStorageValue('FIREBASE_PROJECT_ID') || import.meta.env.VITE_FIREBASE_PROJECT_ID || localConfig.projectId,
+  storageBucket: getLocalStorageValue('FIREBASE_STORAGE_BUCKET') || import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || localConfig.storageBucket,
+  messagingSenderId: getLocalStorageValue('FIREBASE_MESSAGING_SENDER_ID') || import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || localConfig.messagingSenderId,
+  appId: getLocalStorageValue('FIREBASE_APP_ID') || import.meta.env.VITE_FIREBASE_APP_ID || localConfig.appId,
+  firestoreDatabaseId: getLocalStorageValue('FIREBASE_DATABASE_ID') || import.meta.env.VITE_FIREBASE_DATABASE_ID || localConfig.firestoreDatabaseId || '(default)',
 };
 
 // Log loaded safe details for runtime debugging

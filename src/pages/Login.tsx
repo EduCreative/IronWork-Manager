@@ -6,8 +6,17 @@ import {
   GoogleAuthProvider
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db, firestoreStatus, firestoreErrorDetails, testConnection } from '../lib/firebase';
-import { Hammer, Chrome, AlertTriangle, Database, RefreshCw } from 'lucide-react';
+import { 
+  auth, 
+  db, 
+  firestoreStatus, 
+  firestoreErrorDetails, 
+  testConnection,
+  firebaseConfig,
+  setLocalStorageOverride,
+  clearLocalStorageOverrides
+} from '../lib/firebase';
+import { Hammer, Chrome, AlertTriangle, Database, RefreshCw, Settings, Check, HelpCircle, Eye, EyeOff } from 'lucide-react';
 import { logActivity } from '../lib/utils';
 import { useConfig } from '../context/ConfigContext';
 
@@ -20,6 +29,27 @@ export default function Login() {
   const [loading, setLoading] = React.useState(false);
   const [connStatus, setConnStatus] = React.useState(firestoreStatus);
   const [connChecking, setConnChecking] = React.useState(false);
+
+  // Connection configurations state
+  const [showTroubleshooter, setShowTroubleshooter] = React.useState(firestoreStatus !== 'connected' && firestoreStatus !== 'permission-denied');
+  const [customDbId, setCustomDbId] = React.useState(firebaseConfig.firestoreDatabaseId || '(default)');
+  const [customApiKey, setCustomApiKey] = React.useState(firebaseConfig.apiKey || '');
+  const [customProjectId, setCustomProjectId] = React.useState(firebaseConfig.projectId || '');
+  const [showKey, setShowKey] = React.useState(false);
+
+  const handleSaveOverrides = () => {
+    setLocalStorageOverride('FIREBASE_DATABASE_ID', customDbId.trim());
+    setLocalStorageOverride('FIREBASE_API_KEY', customApiKey.trim());
+    if (customProjectId.trim()) {
+      setLocalStorageOverride('FIREBASE_PROJECT_ID', customProjectId.trim());
+    }
+    window.location.reload();
+  };
+
+  const handleResetDefaults = () => {
+    clearLocalStorageOverrides();
+    window.location.reload();
+  };
 
   const handleRetryConnection = async () => {
     setConnChecking(true);
@@ -117,24 +147,114 @@ export default function Login() {
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h2>
 
-          {connStatus === 'unavailable' && (
+          {/* Connection Diagnostician / Troubleshooter Box */}
+          {connStatus !== 'connected' && connStatus !== 'permission-denied' && (
             <div className="mb-6 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/30 p-4 rounded-2xl">
-              <div className="flex gap-2 items-start">
+              <div className="flex gap-2.5 items-start">
                 <AlertTriangle className="text-amber-600 dark:text-amber-500 w-5 h-5 shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-amber-900 dark:text-amber-400 text-sm">Firestore Database Unreachable</h3>
-                  <p className="text-xs text-amber-700 dark:text-amber-500 mt-1 leading-relaxed">
-                    We could not establish a connection to Firestore on project <strong>ironwork-manager</strong>. Please verify:
+                  <h3 className="font-semibold text-amber-900 dark:text-amber-300 text-sm">Firestore Connection Issue</h3>
+                  <p className="text-xs text-amber-700 dark:text-amber-400/95 mt-1 leading-relaxed">
+                    We could not reach Firestore on project <strong className="font-mono">{firebaseConfig.projectId}</strong>. 
                   </p>
-                  <ol className="list-decimal list-inside text-[11px] text-amber-700 dark:text-amber-500 mt-1.5 space-y-1">
-                    <li>Go to the <a href="https://console.firebase.google.com/" target="_blank" rel="noreferrer" className="underline font-semibold hover:text-amber-900 dark:hover:text-amber-300">Firebase Console</a></li>
-                    <li>Click <strong>Firestore Database</strong> in the left sidebar</li>
-                    <li>Make sure you clicked the <strong>Create database</strong> button</li>
-                    <li>Verify if the database name is <strong>(default)</strong> of if you used the custom ID</li>
-                  </ol>
-                  <p className="text-[10px] text-amber-600 dark:text-amber-500/70 mt-2 font-mono break-all bg-amber-100/50 dark:bg-amber-950/40 p-1.5 rounded-lg">
-                    Message: {firestoreErrorDetails || 'API endpoint unreachable / no database instances found'}
+                  
+                  <div className="mt-3 overflow-hidden text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setShowTroubleshooter(!showTroubleshooter)}
+                      className="text-amber-800 dark:text-amber-400 underline font-semibold hover:text-amber-950 dark:hover:text-amber-200 flex items-center gap-1"
+                    >
+                      <Settings className="w-3.5 h-3.5 animate-pulse" />
+                      {showTroubleshooter ? 'Hide Controls' : 'Open Settings & Troubleshooter'}
+                    </button>
+
+                    {showTroubleshooter && (
+                      <div className="mt-4 bg-white/85 dark:bg-gray-950/50 border border-amber-200/60 dark:border-amber-850/40 p-3 rounded-xl space-y-3 shadow-inner text-gray-800 dark:text-gray-100">
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider">
+                          Active Parameters
+                        </div>
+                        
+                        <div>
+                          <label className="block text-[11px] text-gray-400 dark:text-gray-500 mb-0.5">Database Instance ID</label>
+                          <select
+                            value={customDbId}
+                            onChange={(e) => setCustomDbId(e.target.value)}
+                            className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-[11px] font-mono p-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            <option value="(default)">(default) - Standard default database</option>
+                            <option value="ai-studio-fc06b0dc-4427-49a5-87eb-c1b22fe462f9">ai-studio-fc06b0dc-4427-49a5-87eb-c1b22fe462f9 (custom AI Studio DB)</option>
+                            <option value="other">Enter Custom Database ID...</option>
+                          </select>
+                          
+                          {customDbId !== '(default)' && customDbId !== 'ai-studio-fc06b0dc-4427-49a5-87eb-c1b22fe462f9' && (
+                            <input
+                              type="text"
+                              placeholder="Enter Custom Database ID"
+                              value={customDbId === 'other' ? '' : customDbId}
+                              onChange={(e) => setCustomDbId(e.target.value)}
+                              className="w-full mt-1.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-[11px] font-mono p-1.5 rounded-lg text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
+                            />
+                          )}
+                          <p className="text-[10px] text-amber-800 dark:text-amber-500 mt-1 leading-normal italic">
+                            If you created Firestore database manually in Firebase console, select <strong>(default)</strong>.
+                          </p>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] text-gray-400 dark:text-gray-500 mb-0.5">Browser API Key</label>
+                          <div className="relative">
+                            <input
+                              type={showKey ? "text" : "password"}
+                              value={customApiKey}
+                              onChange={(e) => setCustomApiKey(e.target.value)}
+                              className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-[11px] font-mono p-1.5 pr-8 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              placeholder="AIzaSy..."
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowKey(!showKey)}
+                              className="absolute right-2 top-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                            >
+                              {showKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] text-gray-400 dark:text-gray-500 mb-0.5">Project ID</label>
+                          <input
+                            type="text"
+                            value={customProjectId}
+                            onChange={(e) => setCustomProjectId(e.target.value)}
+                            className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-[11px] font-mono p-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            placeholder="ironwork-manager"
+                          />
+                        </div>
+
+                        <div className="flex gap-2 pt-1">
+                          <button
+                            type="button"
+                            onClick={handleSaveOverrides}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] py-1.5 px-2 rounded-lg transition-all text-center"
+                          >
+                            Apply & Reload
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleResetDefaults}
+                            className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-[11px] py-1.5 px-2 rounded-lg transition-all text-center"
+                          >
+                            Reset Defaults
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-2 font-mono break-all bg-amber-100/40 dark:bg-amber-950/40 p-1.5 rounded-lg leading-snug">
+                    Message: {firestoreErrorDetails || 'Endpoint unreachable / Firestore API disabled / Database instance has not been initialized'}
                   </p>
+
                   <button
                     type="button"
                     onClick={handleRetryConnection}
@@ -142,7 +262,7 @@ export default function Login() {
                     className="mt-3 inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-[11px] px-3 py-1.5 rounded-xl transition-all shadow-sm"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${connChecking ? 'animate-spin' : ''}`} />
-                    {connChecking ? 'Checking Connection...' : 'Recheck Database Connection'}
+                    {connChecking ? 'Testing Connection...' : 'Recheck Connection'}
                   </button>
                 </div>
               </div>

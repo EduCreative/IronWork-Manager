@@ -62,20 +62,23 @@ const getFirebaseValue = (key: string, envVal: any, localVal: any): string => {
   const overridden = getLocalStorageValue(key);
   if (overridden) return overridden;
   
-  const localStr = cleanStringValue(localVal);
-  if (localStr) return localStr;
-  
   const envStr = cleanStringValue(envVal);
   if (envStr) return envStr;
+
+  const localStr = cleanStringValue(localVal);
+  if (localStr) return localStr;
   
   return '';
 };
 
+// Compute synchronized values if overridden or fallback are set
+const resolvedProjectId = getFirebaseValue('FIREBASE_PROJECT_ID', import.meta.env.VITE_FIREBASE_PROJECT_ID, localConfig.projectId);
+
 export const firebaseConfig = {
   apiKey: getFirebaseValue('FIREBASE_API_KEY', import.meta.env.VITE_FIREBASE_API_KEY, localConfig.apiKey),
-  authDomain: getFirebaseValue('FIREBASE_AUTH_DOMAIN', import.meta.env.VITE_FIREBASE_AUTH_DOMAIN, localConfig.authDomain),
-  projectId: getFirebaseValue('FIREBASE_PROJECT_ID', import.meta.env.VITE_FIREBASE_PROJECT_ID, localConfig.projectId),
-  storageBucket: getFirebaseValue('FIREBASE_STORAGE_BUCKET', import.meta.env.VITE_FIREBASE_STORAGE_BUCKET, localConfig.storageBucket),
+  authDomain: getLocalStorageValue('FIREBASE_AUTH_DOMAIN') || (resolvedProjectId ? `${resolvedProjectId}.firebaseapp.com` : '') || cleanStringValue(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN) || localConfig.authDomain || '',
+  projectId: resolvedProjectId,
+  storageBucket: getLocalStorageValue('FIREBASE_STORAGE_BUCKET') || (resolvedProjectId ? `${resolvedProjectId}.firebasestorage.app` : '') || cleanStringValue(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET) || localConfig.storageBucket || '',
   messagingSenderId: getFirebaseValue('FIREBASE_MESSAGING_SENDER_ID', import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID, localConfig.messagingSenderId),
   appId: getFirebaseValue('FIREBASE_APP_ID', import.meta.env.VITE_FIREBASE_APP_ID, localConfig.appId),
   firestoreDatabaseId: getFirebaseValue('FIREBASE_DATABASE_ID', import.meta.env.VITE_FIREBASE_DATABASE_ID, localConfig.firestoreDatabaseId) || '(default)',
@@ -123,17 +126,21 @@ export async function testConnection() {
     await getDocFromServer(doc(db, '_internal_', 'connectivity_test'));
     console.log('[Firebase Init] Connection verified successfully');
     firestoreStatus = 'connected';
+    firestoreErrorDetails = '';
   } catch (error: any) {
-    firestoreErrorDetails = error.message || String(error);
-    if (error.code === 'unavailable') {
+    const originalMsg = error.message || String(error);
+    if (error.code === 'unavailable' || originalMsg.includes('offline')) {
       firestoreStatus = 'unavailable';
-      console.error("[Firebase Init] Firestore backend is unavailable. This may be due to project configuration or database not being created yet.");
+      firestoreErrorDetails = `Firestore backend unavailable or client is offline. If you manual set up the Google Firebase project, please ensure you went to Firebase Console (https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore) and clicked "Create Database" with path "(default)".`;
+      console.error("[Firebase Init] Firestore backend is unavailable or client is offline:", firestoreErrorDetails);
     } else if (error.code === 'permission-denied') {
       firestoreStatus = 'permission-denied';
+      firestoreErrorDetails = '';
       console.log("[Firebase Init] Connection successful (got permission denied as expected for internal test path)");
     } else {
       firestoreStatus = 'error';
-      console.warn("[Firebase Init] Firestore connectivity check:", error.message);
+      firestoreErrorDetails = originalMsg;
+      console.warn("[Firebase Init] Firestore connectivity check error:", originalMsg);
     }
   }
 }

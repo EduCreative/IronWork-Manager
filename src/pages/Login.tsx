@@ -173,17 +173,17 @@ export default function Login() {
                       className="text-amber-800 dark:text-amber-400 underline font-semibold hover:text-amber-950 dark:hover:text-amber-200 flex items-center gap-1"
                     >
                       <Settings className="w-3.5 h-3.5 animate-pulse" />
-                      {showTroubleshooter ? 'Hide Controls' : 'Open Settings & Troubleshooter'}
+                      {showTroubleshooter ? 'Hide Troubleshooting Guides' : 'Open Diagnostics & Firebase Controls'}
                     </button>
 
                     {showTroubleshooter && (
-                      <div className="mt-4 bg-white/85 dark:bg-gray-950/50 border border-amber-200/60 dark:border-amber-850/40 p-3 rounded-xl space-y-3 shadow-inner text-gray-800 dark:text-gray-100">
-                        <div className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider">
-                          Active Parameters
+                      <div className="mt-4 bg-white/95 dark:bg-gray-950/80 border border-amber-200 dark:border-amber-900/40 p-3.5 rounded-2xl space-y-4 shadow-md text-gray-800 dark:text-gray-100">
+                        <div className="text-[11px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider border-b border-gray-100 dark:border-gray-900/40 pb-1.5">
+                          Firebase Project Settings
                         </div>
                         
                         <div>
-                          <label className="block text-[11px] text-gray-400 dark:text-gray-500 mb-0.5">Database Instance ID</label>
+                          <label className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-1">Database Instance ID</label>
                           <select
                             value={customDbId}
                             onChange={(e) => setCustomDbId(e.target.value)}
@@ -204,12 +204,12 @@ export default function Login() {
                             />
                           )}
                           <p className="text-[10px] text-amber-800 dark:text-amber-500 mt-1 leading-normal italic">
-                            If you created Firestore database manually in Firebase console, select <strong>(default)</strong>.
+                            Select <strong>(default)</strong> if this is a standard Firestore database manually initialized from the console.
                           </p>
                         </div>
 
                         <div>
-                          <label className="block text-[11px] text-gray-400 dark:text-gray-500 mb-0.5">Browser API Key</label>
+                          <label className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-0.5">Browser API Key</label>
                           <div className="relative">
                             <input
                               type={showKey ? "text" : "password"}
@@ -229,7 +229,7 @@ export default function Login() {
                         </div>
 
                         <div>
-                          <label className="block text-[11px] text-gray-400 dark:text-gray-500 mb-0.5">Project ID</label>
+                          <label className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-0.5">Project ID</label>
                           <input
                             type="text"
                             value={customProjectId}
@@ -239,21 +239,69 @@ export default function Login() {
                           />
                         </div>
 
-                        <div className="flex gap-2 pt-1">
+                        <div className="flex gap-2 pt-1 border-b border-gray-100 dark:border-gray-900/40 pb-3">
                           <button
                             type="button"
                             onClick={handleSaveOverrides}
-                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] py-1.5 px-2 rounded-lg transition-all text-center"
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] py-1.5 px-2 rounded-lg transition-all text-center cursor-pointer"
                           >
                             Apply & Reload
                           </button>
                           <button
                             type="button"
                             onClick={handleResetDefaults}
-                            className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-[11px] py-1.5 px-2 rounded-lg transition-all text-center"
+                            className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-[11px] py-1.5 px-2 rounded-lg transition-all text-center cursor-pointer"
                           >
                             Reset Defaults
                           </button>
+                        </div>
+
+                        {/* Troubleshooting Reference Checklist */}
+                        <div className="space-y-2 text-xs text-gray-600 dark:text-gray-300">
+                          <div className="text-[11px] font-bold text-amber-800 dark:text-amber-500 uppercase tracking-wider">
+                            ⚠️ Action Required in Firebase Console:
+                          </div>
+                          
+                          <ul className="space-y-2 list-disc pl-4 text-[10.5px] leading-relaxed">
+                            <li>
+                              <strong>Create Firestore Database:</strong> If your project is new, open{' '}
+                              <a 
+                                href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline inline-flex items-center gap-0.5 font-semibold"
+                                title="Open Firestore Firebase Console"
+                              >
+                                Firestore Console ↗
+                              </a>{' '}
+                              and click "Create database" to initialize the default database instance.
+                            </li>
+                            <li>
+                              <strong>Authorize This Domain:</strong> If Google Log In tells you "The requested action is invalid", you must authorize this domain origin. Open{' '}
+                              <a 
+                                href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/authentication/settings`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline inline-flex items-center gap-0.5 font-semibold"
+                                title="Open Authentication settings in Firebase"
+                              >
+                                Auth Settings ↗
+                              </a>
+                              , click "Authorized domains", and add <code className="font-mono bg-gray-100 dark:bg-gray-900 px-1 rounded text-red-500 font-bold break-all">{window.location.hostname}</code> to the list.
+                            </li>
+                            <li>
+                              <strong>Enable Providers:</strong> Enable Google and Email/Password sign-in providers on the{' '}
+                              <a 
+                                href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/authentication/providers`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline inline-flex items-center gap-0.5 font-semibold"
+                                title="Open Sign-in provider settings in Firebase"
+                              >
+                                Sign-in Methods Console ↗
+                              </a>.
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     )}
@@ -267,7 +315,7 @@ export default function Login() {
                     type="button"
                     onClick={handleRetryConnection}
                     disabled={connChecking}
-                    className="mt-3 inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-[11px] px-3 py-1.5 rounded-xl transition-all shadow-sm"
+                    className="mt-3 inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-[11px] px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${connChecking ? 'animate-spin' : ''}`} />
                     {connChecking ? 'Testing Connection...' : 'Recheck Connection'}

@@ -47,9 +47,17 @@ export default function App() {
           const userDoc = await getDoc(doc(db, 'users', user.uid));
           if (userDoc.exists()) {
             setUserRole(userDoc.data().role);
+          } else {
+            // Document doesn't exist, use email rule fallback
+            const fallbackRole = user.email === 'kmasroor50@gmail.com' ? 'admin' : 'staff';
+            console.log(`[Firebase Fallback] User document does not exist yet. Assigning fallback '${fallbackRole}' for ${user.email}`);
+            setUserRole(fallbackRole);
           }
         } catch (error) {
           console.error("Error fetching user role:", error);
+          const fallbackRole = user.email === 'kmasroor50@gmail.com' ? 'admin' : 'staff';
+          console.warn(`[Firebase Fallback] Failed to fetch role from Firestore. Falling back to '${fallbackRole}' for ${user.email} (Offline/Unreachable bypass)`);
+          setUserRole(fallbackRole);
         }
       } else {
         setUser(null);

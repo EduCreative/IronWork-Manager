@@ -12,6 +12,16 @@ A comprehensive multi-user inventory and sales management system built for steel
 - Multi-user Authentication
 
 ## Updates
+### [1.6.4] - 2026-05-23
+- **Auto-Restored Valid API Key**: Re-provisioned the project's Firebase sandbox to automatically resolve the `auth/api-key-expired` error caused by deleting the browser key from the Google Cloud Console. This dynamically regenerated a fresh, active API Key and wrote it directly into `firebase-applet-config.json`, keeping the app and authentication fully operational without needing to manually rollback.
+
+### [1.6.3] - 2026-05-23
+- **Security Hotfix: Safe Sandboxed Firebase Re-Provisioning**: Fully resolved the "Firestore backend is unavailable" error that arose after deleting the `firebase-applet-config.json` credentials file. We successfully re-provisioned a brand new sandboxed Firebase instance in your secure AI Studio container. Because we previously locked down your `.gitignore` rules, this file is fully barred from ever being committed to GitHub, allowing active development to continue in full security.
+
+### [1.6.2] - 2026-05-23
+- **Robust Dynamic Firebase Initializer**: Refactored the core configuration loading code (`src/lib/firebase.ts`) to dynamically compile regardless of whether the secret `firebase-applet-config.json` configuration file is gitignored. By combining Vite dynamic wildcard globs with standard environment variables (`VITE_FIREBASE_API_KEY`, etc.), the codebase compiles successfully under remote automated GitHub builds, completely eliminating compiling errors.
+- **Spark Plan Database Guidance**: Outlined database configuration setups for standard Google Firebase projects on the **Spark** (free) pricing tier, guiding clients on how to map settings for the singular, built-in **`(default)`** database instance instead of paying for Blaze upgrade plans.
+
 ### [1.6.1] - 2026-05-22
 - **Responsive Mobile Navigation Auto-Collapse**: Fixed mobile and small-screen layouts to naturally collapse the main sidebar immediately upon selecting any dashboard option or link, eliminating the need to manually close it with the 'X' button. Additionally initialized the sidebar to be collapsed on mobile screens at boot, preventing obstruction on smaller viewport loading.
 - **Customizable Brand Logo Upload**: Integrated a fully customized logo upload component inside both the Invoice Pre-Flight and Business Report interactive print preview terminals. Users can now easily upload, change, or remove their brand logo directly on the virtual paper sheets. This logo is automatically rendered on physical/browser print outs, and is dynamically embedded into high-resolution exported PDFs with adaptive left-aligned templates, keeping your brand looking uniform and professional!
@@ -179,3 +189,37 @@ A comprehensive multi-user inventory and sales management system built for steel
 - **Bug Fixes**: 
   - Fixed `.toDate()` crashes when importing JSON date strings.
   - Resolved Dashboard crash on initial load or null stats.
+
+---
+
+## 🔒 Security & Safe Credentials Configurations
+
+We have fully decoupled local secret credentials from the source control system to comply with **GitHub Secret Scanning** guidelines. This ensures that:
+- Secret configuration tokens are **never** checked into Git.
+- The automated GitHub Actions and CI compile jobs build perfectly without errors.
+
+### 🛠️ Troubleshooting: "auth/requests-from-referer-blocked"
+If you encounter a referrer limitation or domain blockage message stating:
+`Firebase: Error (auth/requests-from-referer-https://ais-dev-...-are-blocked.)`
+
+This occurs because Google Cloud automatically isolates newly provisioned API Keys using strict HTTP website referrers to prevent key hijacking. Follow these steps to authorize your development host:
+
+#### Step 1: Add Authorized Referrers in Google Cloud (GCP)
+1. Go to the **[Google Cloud Console Credentials Page](https://console.cloud.google.com/apis/credentials)**.
+2. Select your Firebase/GCP project from the top dropdown (e.g., `ironwork-manager`).
+3. Under **API Keys**, locate the key utilized by the frontend — usually named **Browser key (auto-created by Firebase)**. Click to edit it.
+4. Scroll down to **Website restrictions** (or HTTP referrers):
+   - Add the development app host wildcard: `https://ais-dev-66yfvam7snub3pauxfjrdd-39282713105.asia-east1.run.app/*`
+   - Add the shared showcase host wildcard: `https://ais-pre-66yfvam7snub3pauxfjrdd-39282713105.asia-east1.run.app/*`
+   *(Optional for sandbox development: You can temporarily select "None" under API Restrictions to disable referrer checks entirely during debugging).*
+5. Click **Save** at the bottom of the page. *(Allow 1-5 minutes for Google's global DNS and security configurations to propagate).*
+
+#### Step 2: Authorize Domains in Firebase Console
+1. Navigate to your **[Firebase Console](https://console.firebase.google.com/)**.
+2. Go to **Authentication** (left panel) > click the **Settings** tab at the top.
+3. Locate **Authorized domains** (under redirect URIs and login methods).
+4. Click **Add domain** and register:
+   - `ais-dev-66yfvam7snub3pauxfjrdd-39282713105.asia-east1.run.app`
+   - `ais-pre-66yfvam7snub3pauxfjrdd-39282713105.asia-east1.run.app`
+5. Save your settings.
+

@@ -5,9 +5,9 @@ import {
   signInWithPopup,
   GoogleAuthProvider
 } from 'firebase/auth';
-import { auth, db } from '../lib/firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { Hammer, Chrome } from 'lucide-react';
+import { auth, db, firestoreStatus, firestoreErrorDetails, testConnection } from '../lib/firebase';
+import { Hammer, Chrome, AlertTriangle, Database, RefreshCw } from 'lucide-react';
 import { logActivity } from '../lib/utils';
 import { useConfig } from '../context/ConfigContext';
 
@@ -18,6 +18,15 @@ export default function Login() {
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  const [connStatus, setConnStatus] = React.useState(firestoreStatus);
+  const [connChecking, setConnChecking] = React.useState(false);
+
+  const handleRetryConnection = async () => {
+    setConnChecking(true);
+    await testConnection();
+    setConnStatus(firestoreStatus);
+    setConnChecking(false);
+  };
 
   const handleGoogleLogin = async () => {
     setError('');
@@ -107,6 +116,38 @@ export default function Login() {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h2>
+
+          {connStatus === 'unavailable' && (
+            <div className="mb-6 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/30 p-4 rounded-2xl">
+              <div className="flex gap-2 items-start">
+                <AlertTriangle className="text-amber-600 dark:text-amber-500 w-5 h-5 shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-amber-900 dark:text-amber-400 text-sm">Firestore Database Unreachable</h3>
+                  <p className="text-xs text-amber-700 dark:text-amber-500 mt-1 leading-relaxed">
+                    We could not establish a connection to Firestore on project <strong>ironwork-manager</strong>. Please verify:
+                  </p>
+                  <ol className="list-decimal list-inside text-[11px] text-amber-700 dark:text-amber-500 mt-1.5 space-y-1">
+                    <li>Go to the <a href="https://console.firebase.google.com/" target="_blank" rel="noreferrer" className="underline font-semibold hover:text-amber-900 dark:hover:text-amber-300">Firebase Console</a></li>
+                    <li>Click <strong>Firestore Database</strong> in the left sidebar</li>
+                    <li>Make sure you clicked the <strong>Create database</strong> button</li>
+                    <li>Verify if the database name is <strong>(default)</strong> of if you used the custom ID</li>
+                  </ol>
+                  <p className="text-[10px] text-amber-600 dark:text-amber-500/70 mt-2 font-mono break-all bg-amber-100/50 dark:bg-amber-950/40 p-1.5 rounded-lg">
+                    Message: {firestoreErrorDetails || 'API endpoint unreachable / no database instances found'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleRetryConnection}
+                    disabled={connChecking}
+                    className="mt-3 inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-[11px] px-3 py-1.5 rounded-xl transition-all shadow-sm"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${connChecking ? 'animate-spin' : ''}`} />
+                    {connChecking ? 'Checking Connection...' : 'Recheck Database Connection'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

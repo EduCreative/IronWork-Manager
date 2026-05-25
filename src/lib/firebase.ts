@@ -7,12 +7,20 @@ const configFiles = import.meta.glob('/firebase-applet-*.json', { eager: true })
 const fallbackConfigFiles = import.meta.glob('../../firebase-applet-*.json', { eager: true });
 
 const mergedConfigFiles = { ...configFiles, ...fallbackConfigFiles };
+console.log('[Firebase Init] Globbed config files found:', Object.keys(mergedConfigFiles));
+console.log('[Firebase Init] Globbed modules:', mergedConfigFiles);
+
 const configKey = Object.keys(mergedConfigFiles)[0];
 const localConfig = configKey ? (mergedConfigFiles[configKey] as any).default || mergedConfigFiles[configKey] : {};
+console.log('[Firebase Init] Extracted localConfig:', localConfig);
 
 const getLocalStorageValue = (key: string): string | null => {
   try {
-    return localStorage.getItem(key);
+    const val = localStorage.getItem(key);
+    if (!val || val === 'undefined' || val === 'null' || val.trim() === '') {
+      return null;
+    }
+    return val;
   } catch (e) {
     return null;
   }
